@@ -1,2 +1,9 @@
 
 /vendor
+/public
+/config
+/config
+config/app.php
+/app
+.env
+/config
