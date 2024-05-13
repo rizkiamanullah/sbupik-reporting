@@ -90,6 +90,7 @@ Route::group(['middleware' => 'auth'], function () {
 	
 	// reporting	
 	Route::post('/reporting/save', [UserController::class, 'saveReporting']);
+	Route::post('/reporting/weekly/save', [UserController::class, 'saveReportingWeekly']);
 	Route::get('/pm-report/user/{id}', [UserController::class,'getReports']);
 	Route::post('/pm-report/reportok', [UserController::class,'reportOk']);
 	// end reporting

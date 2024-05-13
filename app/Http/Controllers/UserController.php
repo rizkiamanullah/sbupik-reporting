@@ -185,6 +185,60 @@ class UserController extends Controller
 
     }
 
+    public function saveReportingWeekly(){
+        $user_id = $_POST['user_id'];
+        $rencana = $_POST['rencana_input'];
+        $weekNum = $_POST['weekNum'];
+
+        $today = DB::table('tb_weekly_progress')
+        ->where('id_user',$user_id)
+        ->where('year',date('Y'))
+        ->where('weekNum',$weekNum)
+        // ->where('date', date('Y-m-d'))
+        ->first();
+
+        if ($today){
+            $progress = json_decode($today->progress, true);
+            $progress['datetime2'] = date('Y-m-d H:i:s');
+
+            $update = DB::table('tb_weekly_progress')
+            ->where('id_user',$user_id)
+            // ->where('date',date('Y-m-d'))
+            ->where('year', date('Y'))
+            ->where('weekNum', $weekNum)
+            ->update([
+                'done_for_today' => 1,
+                'json_data' => json_encode($progress),
+            ]);
+
+            if ($update){
+                // return ['status' => 200, 'success' => true, 'type' => 'update'];
+                return redirect()->to('/monthly')->with(['msg' => 'Pelaporan Mingguan Tersimpan!']);
+            }
+            return ['status' => 203, 'success' => false, 'type' => 'update'];
+        }
+
+        $insert = DB::table('tb_weekly_progress')
+        ->insert([
+            'id_user' => $user_id,
+            'date' => date('Y-m-d'),
+            'year'=> date('Y'),
+            'weekNum'=> $weekNum,
+            'json_data' => json_encode([
+                'rencana' => $rencana,
+                'datetime' => date('Y-m-d H:i:s'),
+            ])
+        ]);
+
+        if ($insert){
+            // return ['status' => 200, 'success' => true, 'type' => 'insert'];
+            return redirect()->to('/monthly')->with(['msg' => 'Pelaporan Mingguan Tersimpan!']);
+        }
+        return ['status' => 203, 'success' => false, 'type' => 'insert'];
+
+    }
+
+
     public function reportOk(){
         $id = $_POST['id'];
         $this_report = DB::table('tb_daily_progress')
