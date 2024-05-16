@@ -2,6 +2,15 @@
 
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Dashboard'])
+    <style>
+        td {
+        white-space: normal !important; 
+        word-wrap: break-word;  
+        }
+        table {
+        table-layout: fixed;
+        }
+    </style>
     
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -30,10 +39,10 @@
         </div>
     </div>
     
-    <div class="container-fluid fade-card my-3">
-        <div class="row">
-            <div class="col-lg-12 my-3">
-                <div class="card" style="background-color: #fff">
+    <div class="container-fluid fade-card my-3" style="height:auto;">
+        <div class="row" >
+            <div class="col-lg-12 my-3" style="height:auto;">
+                <div class="card" style="background-color: #fff;">
                     <div class="card-body">
                         <div class="">
                             @php
@@ -41,7 +50,9 @@
                                 if (@$_GET['m']){
                                     $m = $_GET['m'];
                                 }
+                                $startWeekNow = date('W', strtotime($m));
                             @endphp
+                            <h6>Pilih Bulan</h6>
                             <select name="mon" id="mon" class="form-control select2 text-bold">
                                 @for ($mon=0; $mon < 12; $mon++)
                                     <option {{@$_GET['m'] == date('Y-m', strtotime('-'.$mon.' month')) ? "selected" : ""}} value="{{date('Y-m', strtotime('-'.$mon.' month'))}}">
@@ -49,70 +60,83 @@
                                     </option>
                                 @endfor
                             </select>
-                            <div class="row">
-                                <div class="col-sm-12" style="height: 60vh; border-radius:15px; border-color:grey; border-width:0.5px; overflow-y: auto" >
-                                    
-                                    <div class="py-2  mb-3">
-                                        <div class="card" style="background-color: #eeeff3; height: auto">
-                                            <div class="card-body">
-                                                @php
-                                                    $dayCounter = 1;
-                                                    $saidNum = ['One','Two','Three','Four','Five'];
-                                                    $startWeekNow = date('W');
-                                                @endphp
-                                                <div class="accordion accordion-flush" id="accordionFlushExample">
-                                                @for ($week = 0; $week < 5; $week++)
-                                                    @php
-                                                        @$dataToday = DB::table('tb_weekly_progress')
-                                                        ->where('weekNum',$startWeekNow)
-                                                        ->first();
-                                                    @endphp
-                                                    <div class="week{{$week}}">
-                                                        <div class="accordion-item">
-                                                            <h2 class="accordion-header" id="flush-heading{{$saidNum[$week]}}">
-                                                                <button class="accordion-button bg-white my-2 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$saidNum[$week]}}" aria-expanded="false" aria-controls="flush-collapse{{$saidNum[$week]}}">
-                                                                    <h6>Minggu {{$week+1}}</h6>
-                                                                </button>
-                                                            </h2>
-                                                            <div id="flush-collapse{{$saidNum[$week]}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$saidNum[$week]}}" data-bs-parent="#accordionFlushExample">
-                                                                <div class="accordion-body">
-                                                                    <div class="upper" style="overflow-x: auto; border-radius:15px;">
-                                                                        <div class="" style="width:auto">
-                                                                            @if (!@$dataToday)
-                                                                                <div class="col-sm-12 pb-2">
-                                                                                    <div href="#" style="border-radius: 25px; background-color:tomato" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-week="{{$startWeekNow}}" class="p-4 text-white btn-outline-dark buat-lap"><i class="fas fa-plus"></i>&nbsp;Laporan Minggu {{$week+1}}</div>
-                                                                                </div>
-                                                                            @else
-                                                                                <div class="col-sm-12 pb-2">
-                                                                                    <div style="border-radius: 3px;" class="p-4 text-dark bg-white">
-                                                                                        <table class="table table-bordered">
-                                                                                            <tr>
-                                                                                                <td width="15%"><h6 for="">Rencana Minggu Ini</h6></td>
-                                                                                                <td>{{strip_tags(json_decode(@$dataToday->json_data, true)['rencana'])}}</td>
-                                                                                            </tr>
-                                                                                        </table>
-                                                                                    </div>
-                                                                                </div>
-                                                                            @endif
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12" style="height: 60vh; border-radius:15px; border-color:grey; border-width:0.5px;" >
+                        
+                        <div class="py-2  mb-3">
+                            <div class="card" style="background-color: #ffffff; height: auto">
+                                <div class="card-body">
+                                    <h5>{{date('F Y', strtotime($m))}}</h5>
+                                    @php
+                                        $dayCounter = 1;
+                                        $saidNum = ['One','Two','Three','Four','Five'];
+                                    @endphp
+                                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                                    @for ($week = 0; $week < 5; $week++)
+                                        @php
+                                            @$dataToday = DB::table('tb_weekly_progress')
+                                            ->where('id_user', Auth::user()->id)
+                                            ->where('weekNum',$startWeekNow)
+                                            ->first();
+                                        @endphp
+                                        <div class="week{{$week}} my-2">
+                                            <div class="accordion-item border rounded">
+                                                <h2 class="accordion-header" id="flush-heading{{$saidNum[$week]}}" style="background-color: #f2f2f2">
+                                                    <button class="accordion-button btn-outline-light rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$saidNum[$week]}}" aria-expanded="false" aria-controls="flush-collapse{{$saidNum[$week]}}">
+                                                        <h6>Minggu {{$week+1}}</h6>
+                                                    </button>
+                                                </h2>
+                                                <div id="flush-collapse{{$saidNum[$week]}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$saidNum[$week]}}" data-bs-parent="#accordionFlushExample">
+                                                    <div class="accordion-body">
+                                                        <div class="upper" style="overflow-x: auto; border-radius:15px;">
+                                                            <div class="" style="width:auto">
+                                                                @if (!@$dataToday)
+                                                                    @if ($startWeekNow == date('W'))
+                                                                        <div class="col-sm-12 pb-2">
+                                                                            <div href="#" style="border-radius: 25px; background-color:tomato" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-week="{{$startWeekNow}}" class="p-4 text-white btn-outline-dark buat-lap"><i class="fas fa-plus"></i>&nbsp;Buat Laporan!</div>
+                                                                        </div>
+                                                                    @else
+                                                                        <div class="col-sm-12 pb-2">
+                                                                            <p>Rencana tidak terisi</p>
+                                                                        </div>
+                                                                    @endif
+                                                                @else
+                                                                    <div class="col-sm-12 pb-2">
+                                                                        <div style="border-radius: 3px;" class="p-2 text-dark bg-white">
+                                                                            <table class="table table-bordered" style="width: 100%">
+                                                                                <tr>
+                                                                                    <td><h6 for="">{{date('d F Y', strtotime(date('Y')."W".$startWeekNow))}} - {{date('d F Y', strtotime(date('Y')."W".$startWeekNow." + 6 days"))}}</h6></td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td><p class="text-break">
+                                                                                        {{strip_tags(json_decode(@$dataToday->json_data, true)['rencana'])}}</td>
+                                                                                    </p>
+                                                                                </tr>
+                                                                                <tr></tr>
+                                                                            </table>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    @php
-                                                        $startWeekNow++;
-                                                    @endphp
-                                                @endfor
                                                 </div>
                                             </div>
                                         </div>
-                                        <br>
+                                        @php
+                                            $startWeekNow++;
+                                        @endphp
+                                    @endfor
                                     </div>
-
                                 </div>
                             </div>
+                            <br>
                         </div>
+
                     </div>
                 </div>
             </div>

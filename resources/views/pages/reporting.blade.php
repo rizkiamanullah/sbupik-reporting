@@ -2,7 +2,16 @@
 
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Dashboard'])
-    
+    <style>
+        td {
+        white-space: normal !important; 
+        word-wrap: break-word;  
+        }
+        table {
+        table-layout: fixed;
+        }
+    </style>
+
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -45,12 +54,29 @@
                     <div class="card-body">
                         <div class="">
                             <div class="row">
+                                <div class="col-sm-12 py-2">
+                                    @php
+                                        @$weekPlan = DB::table('tb_weekly_progress')
+                                        ->where('id_user', Auth::user()->id)
+                                        ->where('weekNum',date('W'))
+                                        ->first();
+                                    @endphp
+                                    <table class="table table-bordered table-striped">
+                                        <tr>
+                                            <td><h6>Rencana Minggu Ini</h6></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p class="text-break">{{strip_tags(json_decode(@$weekPlan->json_data, true)['rencana'])}}</p></td>
+                                        </tr>
+                                        <tr></tr>
+                                    </table>
+                                </div>
                                 @if (!@$dataToday)
                                 <div class="col-sm-6 pb-2">
                                     <div href="#" style="border-radius: 25px; background-color:tomato" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="p-4 text-white btn-outline-dark buat-lap"><i class="fas fa-plus"></i>&nbsp;Buat Laporan Target</div>
                                 </div>
                                 @else
-                                    @if (!@$dataToday->done_for_today)
+                                @if (!@$dataToday->done_for_today)
                                     <div class="col-sm-6 pb-2">
                                         <div href="#" style="border-radius: 25px; background-color:yellowgreen" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="p-4 text-white btn-outline-dark buat-lap-2"><i class="fas fa-plus"></i>&nbsp;Buat Laporan Realisasi</div>
                                     </div>
@@ -62,13 +88,19 @@
                                 @endif
                             </div>
                             <div class="row my-1">
-                                <div class="col-sm-12" style="height: 60vh; border-radius:15px; border-color:grey; border-width:0.5px; overflow-y: auto" >
-                                    
+                                <br>
+                                <hr>
+                                <br>
+                                <h4>Laporan Harian Bulan {{date('F Y')}}</h4>
+                                <div class="col-sm-12" style="height: 60vh; border-radius:15px; border-color:grey; border-width:0.5px;" >
+                                
                                     <div class="py-2  mb-3">
                                         @php
-                                            $staticstart = date('Y-m-d',strtotime('last saturday of previous month'));
-                                            $staticend = date('Y-m-d',strtotime('first friday of next month'));
-                                            // dd($staticstart);
+                                            $m = date('Y-m');
+                                            if (@$_GET['m']){
+                                                $m = $_GET['m'];
+                                            }
+                                            $startWeekNow = date('W', strtotime($m));
                                         @endphp
                                         <div class="card" style="background-color: #eeeff3; height: auto">
                                             <div class="card-body">
@@ -78,75 +110,82 @@
                                                 @endphp
                                                 <div class="accordion accordion-flush" id="accordionFlushExample">
                                                 @for ($week = 0; $week < 5; $week++)
+                                                    @php
+                                                        @$dataToday = DB::table('tb_daily_progress')
+                                                        ->where('id_user', Auth::user()->id)
+                                                        ->first();
+
+                                                        $staticstart = date('Y-m-d',strtotime('last saturday of previous month'));
+                                                        $staticend = date('Y-m-d',strtotime('first friday of next month'));    
+                                                    @endphp
                                                     <div class="week{{$week}}">
-                                                            <div class="accordion-item">
-                                                                <h2 class="accordion-header" id="flush-heading{{$saidNum[$week]}}">
-                                                                <button class="accordion-button bg-white my-2 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$saidNum[$week]}}" aria-expanded="false" aria-controls="flush-collapse{{$saidNum[$week]}}">
-                                                                    <h6>Minggu {{$week+1}}</h6>
-                                                                </button>
-                                                                </h2>
-                                                                <div id="flush-collapse{{$saidNum[$week]}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$saidNum[$week]}}" data-bs-parent="#accordionFlushExample">
-                                                                <div class="accordion-body">
-                                                                    <div class="upper" style="overflow-x: auto; border-radius:15px;">
-                                                                        <div class="d-flex flex-col" style="width:auto">
-                                                                            <div class="d-flex">
-                                                                                @for ($i = 1; $i <= 7; $i++)
-                                                                                @php
-                                                                                    @$iterDate = date('Y-m-d', strtotime($staticstart . '+'.$dayCounter.' day'));
-                                                                                @endphp
-                                                                                @if (date('m', strtotime(@$iterDate)) == date('m'))
-                                                                                    <div class="card mx-2">
-                                                                                        <div class="card-header">
-                                                                                            <h6 class="{{date('D', strtotime($iterDate)) == "Sun" || date('D', strtotime($iterDate)) == "Sat" ? 'text-danger' : ''}}">
-                                                                                                {{date('D', strtotime($iterDate))}}
-                                                                                            </h6>
-                                                                                            <hr>
-                                                                                        </div>
-                                                                                        <div class="card-body pt-0">
-                                                                                            <div class="px-4">
-                                                                                                <h1 class="{{date('D', strtotime($iterDate)) == "Sun" || date('D', strtotime($iterDate)) == "Sat" ? 'text-danger' : ''}}">{{date('d', strtotime(@$iterDate))}}</h1>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div> 
-                                                                                @endif
-                                                                                @php
-                                                                                    $dayCounter++;
-                                                                                @endphp
-                                                                                @endfor
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <br>
-                                                                    <div class="lower d-none">
-                                                                        <div class="card" style="width: 100%">
-                                                                            <div class="card-header">
-                                                                                <h4>Rabu, 27 Maret 2024</h4>
-                                                                            </div>
-                                                                            <div class="card-body">
-                                                                                <h6 for=""><b>Rencana</b></h6>
-                                                                                <div class="d-flex flex-row">
-                                                                                    <div class="p-2">
-                                                                                        <p style="word-wrap: auto">{{@json_decode($dataToday->progress, true)['rencana'] ?: "-"}}</p>
+                                                        <div class="accordion-item">
+                                                            <h2 class="accordion-header" id="flush-heading{{$saidNum[$week]}}">
+                                                            <button class="accordion-button bg-white my-2 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$saidNum[$week]}}" aria-expanded="false" aria-controls="flush-collapse{{$saidNum[$week]}}">
+                                                                <h6>Minggu {{$week+1}}</h6>
+                                                            </button>
+                                                            </h2>
+                                                            <div id="flush-collapse{{$saidNum[$week]}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$saidNum[$week]}}" data-bs-parent="#accordionFlushExample">
+                                                            <div class="accordion-body">
+                                                                <div class="upper" style="overflow-x: auto; border-radius:15px;">
+                                                                    <div class="d-flex flex-col" style="width:auto">
+                                                                        <div class="d-flex">
+                                                                            @for ($i = 1; $i <= 7; $i++)
+                                                                            @php
+                                                                                @$iterDate = date('Y-m-d', strtotime($staticstart . '+'.$dayCounter.' day'));
+                                                                            @endphp
+                                                                            @if (date('m', strtotime(@$iterDate)) == date('m'))
+                                                                                <div class="card mx-2">
+                                                                                    <div class="card-header">
+                                                                                        <h6 class="{{date('D', strtotime($iterDate)) == "Sun" || date('D', strtotime($iterDate)) == "Sat" ? 'text-danger' : ''}}">
+                                                                                            {{date('D', strtotime($iterDate))}}
+                                                                                        </h6>
+                                                                                        <hr>
                                                                                     </div>
-                                                                                </div>
-                                                                                <h6 for=""><b>Realisasi</b></h6>
-                                                                                <div class="d-flex flex-row">
-                                                                                    <div class="p-2">
-                                                                                        <p style="word-wrap: auto">{{@json_decode($dataToday->progress, true)['realisasi'] ?: "-"}}</p>
+                                                                                    <div class="card-body pt-0">
+                                                                                        <div class="px-4">
+                                                                                            <h1 class="{{date('D', strtotime($iterDate)) == "Sun" || date('D', strtotime($iterDate)) == "Sat" ? 'text-danger' : ''}}">{{date('d', strtotime(@$iterDate))}}</h1>
+                                                                                        </div>
                                                                                     </div>
-                                                                                </div>
-                                                                            </div>
+                                                                                </div> 
+                                                                            @endif
+                                                                            @php
+                                                                                $dayCounter++;
+                                                                            @endphp
+                                                                            @endfor
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <br>
+                                                                <div class="lower d-none">
+                                                                    <div class="card" style="width: 100%">
+                                                                        <div class="card-header">
+                                                                            <h4>Rabu, 27 Maret 2024</h4>
+                                                                        </div>
+                                                                        <div class="card-body">
+                                                                            <h6 for=""><b>Rencana</b></h6>
+                                                                            <div class="d-flex flex-row">
+                                                                                <div class="p-2">
+                                                                                    <p style="word-wrap: auto">{{@json_decode($dataToday->progress, true)['rencana'] ?: "-"}}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <h6 for=""><b>Realisasi</b></h6>
+                                                                            <div class="d-flex flex-row">
+                                                                                <div class="p-2">
+                                                                                    <p style="word-wrap: auto">{{@json_decode($dataToday->progress, true)['realisasi'] ?: "-"}}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                            </div>
                                                         </div>
-                                                        @endfor
                                                     </div>
+                                                @endfor
+                                                </div>
                                             </div>
                                         </div>
-                                        <br>
                                     </div>
 
                                 </div>
