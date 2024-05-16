@@ -19,6 +19,7 @@ class PageController extends Controller
     
     public function index(string $page)
     {
+        // dd($page, view()->exists("pages.{$page}"));
         if (view()->exists("pages.{$page}")) {
             $data = [];
             $dataRoles = [];
@@ -116,6 +117,17 @@ class PageController extends Controller
                 $dataUser = DB::table('users')
                 ->where('user_role_id', 1)
                 ->where('username','!=',Auth::user()->username)
+                ->get();
+
+                $dataOther = DB::table("tb_daily_progress")
+                    ->where('id_user', Auth::user()->id)
+                    ->where('date','<',date('Y-m-d'))
+                    ->get();
+                return view("pages.{$page}", compact('dataUser', 'dataOther'));
+            }
+            if ($page == "list-officer") {
+                $dataUser = DB::table('users')
+                ->where('user_role_id', 1)
                 ->get();
 
                 $dataOther = DB::table("tb_daily_progress")

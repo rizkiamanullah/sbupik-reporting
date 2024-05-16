@@ -12,10 +12,17 @@
         }
     </style>
 
+    @php
+        @$weekPlan = DB::table('tb_weekly_progress')
+        ->where('id_user', Auth::user()->id)
+        ->where('weekNum',date('W'))
+        ->first();
+    @endphp
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
         <form action="{{url('/reporting/save')}}" id="modalForm" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id_task" value="{{@$weekPlan->id}}">
             <div class="modal-content">
                 <div class="modal-body" style="height: 80vh;">
                     <div class="container p-2">
@@ -32,9 +39,22 @@
                             </div>
                         </div>
                         <div class="page-2 p-4">
-                            <h4><b>Hari ini,</b></h4>
-                            <h6><b>realisasi</b> saya hari ini adalah...</h6>
-                            <textarea name="realisasi" placeholder="Tuliskan realisasi hari ini" class="form-control real" id="" cols="30" rows="10"></textarea>
+                            <div style="height:auto; overflow-y:auto;">
+                                <div>
+                                    <table class="table table-striped table-bordered">
+                                        <tr>
+                                            <td><h6>Rencana</h6></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{@json_decode($dataToday->progress, true)['rencana'] ?: "-"}}</td>
+                                        </tr>
+                                        <tr></tr>
+                                    </table>
+                                </div>
+                                <h4><b>Hari ini,</b></h4>
+                                <h6><b>realisasi</b> saya hari ini adalah...</h6>
+                                <textarea name="realisasi" placeholder="Tuliskan realisasi hari ini" class="form-control real" id="" cols="30" rows="10"></textarea>
+                            </div>
                             <div class="d-flex flex-row justify-content-between my-2">
                                 <div></div>
                                 <div style="background-color:tomato; border-radius:20px;" class="pg3 btn-outline-dark float-right btn-block p-3 text-white">OK</div>
@@ -46,6 +66,7 @@
         </form>
         </div>
     </div>
+    <!-- Modal -->
     
     <div class="container-fluid fade-card my-3">
         <div class="row">
@@ -55,12 +76,6 @@
                         <div class="">
                             <div class="row">
                                 <div class="col-sm-12 py-2">
-                                    @php
-                                        @$weekPlan = DB::table('tb_weekly_progress')
-                                        ->where('id_user', Auth::user()->id)
-                                        ->where('weekNum',date('W'))
-                                        ->first();
-                                    @endphp
                                     <table class="table table-bordered table-striped">
                                         <tr>
                                             <td><h6>Rencana Minggu Ini</h6></td>
@@ -78,10 +93,43 @@
                                 @else
                                 @if (!@$dataToday->done_for_today)
                                     <div class="col-sm-6 pb-2">
+                                        <table class="table table-striped table-bordered">
+                                            <tr>
+                                                <td><h6>Rencana</h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{@json_decode($dataToday->progress, true)['rencana'] ?: "-"}}</td>
+                                            </tr>
+                                            <tr></tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-sm-6 pb-2">
                                         <div href="#" style="border-radius: 25px; background-color:yellowgreen" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="p-4 text-white btn-outline-dark buat-lap-2"><i class="fas fa-plus"></i>&nbsp;Buat Laporan Realisasi</div>
                                     </div>
                                     @else
                                     <div class="col-sm-6 pb-2">
+                                        <table class="table table-striped table-bordered">
+                                            <tr>
+                                                <td><h6>Rencana</h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{@json_decode($dataToday->progress, true)['rencana'] ?: "-"}}</td>
+                                            </tr>
+                                            <tr></tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-sm-6 pb-2">
+                                        <table class="table table-striped table-bordered">
+                                            <tr>
+                                                <td><h6>Realisasi</h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{@json_decode($dataToday->progress, true)['realisasi'] ?: "-"}}</td>
+                                            </tr>
+                                            <tr></tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-sm-12 pb-2">
                                         <div href="#" style="border-radius: 25px; background-color:grey" class="p-4 text-white btn-outline-dark tap-close">Terima kasih. Anda sudah melapor hari ini 🙏🙏🙏</div>
                                     </div>
                                     @endif
@@ -91,7 +139,7 @@
                                 <br>
                                 <hr>
                                 <br>
-                                <h4>Laporan Harian Bulan {{date('F Y')}}</h4>
+                                <h4>Rekap Kegiatan Harian di Bulan {{date('F Y')}}</h4>
                                 <div class="col-sm-12" style="height: 60vh; border-radius:15px; border-color:grey; border-width:0.5px;" >
                                 
                                     <div class="py-2  mb-3">
@@ -135,7 +183,7 @@
                                                                                 @$iterDate = date('Y-m-d', strtotime($staticstart . '+'.$dayCounter.' day'));
                                                                             @endphp
                                                                             @if (date('m', strtotime(@$iterDate)) == date('m'))
-                                                                                <div class="card mx-2">
+                                                                                <div class="card mx-2 btn-outline-dark">
                                                                                     <div class="card-header">
                                                                                         <h6 class="{{date('D', strtotime($iterDate)) == "Sun" || date('D', strtotime($iterDate)) == "Sat" ? 'text-danger' : ''}}">
                                                                                             {{date('D', strtotime($iterDate))}}
@@ -153,28 +201,6 @@
                                                                                 $dayCounter++;
                                                                             @endphp
                                                                             @endfor
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <br>
-                                                                <div class="lower d-none">
-                                                                    <div class="card" style="width: 100%">
-                                                                        <div class="card-header">
-                                                                            <h4>Rabu, 27 Maret 2024</h4>
-                                                                        </div>
-                                                                        <div class="card-body">
-                                                                            <h6 for=""><b>Rencana</b></h6>
-                                                                            <div class="d-flex flex-row">
-                                                                                <div class="p-2">
-                                                                                    <p style="word-wrap: auto">{{@json_decode($dataToday->progress, true)['rencana'] ?: "-"}}</p>
-                                                                                </div>
-                                                                            </div>
-                                                                            <h6 for=""><b>Realisasi</b></h6>
-                                                                            <div class="d-flex flex-row">
-                                                                                <div class="p-2">
-                                                                                    <p style="word-wrap: auto">{{@json_decode($dataToday->progress, true)['realisasi'] ?: "-"}}</p>
-                                                                                </div>
-                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>

@@ -40,9 +40,11 @@ class HomeController extends Controller
             ->where("archived", 0)
             ->get();
             
+            // officer
         if (Auth::user()->user_role_id == 1){
             return view('pages.user.officer.dashboard', compact('curr_sticky_notes_db','curr_board_db','curr_task_db', 'users','projects'));
         }
+            // pm/ higher
         if (Auth::user()->user_role_id > 1 && Auth::user()->user_role_id < 99){
             return view('pages.user.pm.dashboard', compact('curr_sticky_notes_db', 'projects', 'users'));
         }

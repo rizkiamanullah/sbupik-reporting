@@ -31,10 +31,13 @@ class LoginController extends Controller
             $request->session()->regenerate();
             $user = DB::table('users')->where('email',$request->email)->first();
             if ($user->user_role_id > 90){
+                // admin
                 return redirect()->intended('dashboard');
             } else {
+                // officer
                 if ($user->user_role_id == 1 ){
                     return redirect()->intended('dashboard');
+                // pm/ higher
                 } elseif ($user->user_role_id == 2){
                     return redirect()->intended('dashboard');
                 }

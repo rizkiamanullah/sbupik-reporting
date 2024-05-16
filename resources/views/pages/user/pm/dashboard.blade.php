@@ -3,115 +3,34 @@
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Dashboard'])
     
-    <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-        <form action="{{url('/project/saveProject')}}" method="POST" enctype="multipart/form-data">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Tambah Proyek</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row p-2">
-                        @csrf
-                        <div class="col-sm-12">
-                            <label for="">Nama Proyek</label>
-                            <input name="nama_proyek" type="text" class="form-control">
-                        </div>
-                        <div class="col-sm-6">
-                            <label for="">Manajer Proyek</label>
-                            <input type="text" name="nama_manager" value="{{Auth::user()->firstname}}" readonly class="form-control">
-                        </div>
-                        <div class="col-sm-6">
-                            <label for="">Anggota</label>
-                            <div class="table-responsive" style="height:160px; overflow-y:auto; border-size: 1px;">
-                                <table class="table table-striped">
-                                    <tbody id="dbody">
-                                        <tr>
-                                            <td>
-                                                <select name="anggota[]" id="" class="form-control text-dark select2">
-                                                    @foreach ($users as $u)
-                                                        <option value="{{$u->id}}">{{$u->username}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="my-2 btn btn-sm bg-success add text-white"><i class="fas fa-plus"></i>&nbsp;Tambah Anggota</div>
-                        </div>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary">Simpan</button>
-            </div>
-        </div>
-        </form>
-        </div>
-    </div>
-    
     <div class="container-fluid fade-card my-3">
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body" style="overflow-x: auto;">
+                        <h6>PM/ Higher Dashboard</h6>
                         <div class="d-flex flex-column" style="width:100%;">
                             <div class="d-flex flex-row align-self-center px-5">
-                                <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/reporting')}}">
+                                {{-- <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/reporting')}}">
                                     <div class="d-flex flex-column">
                                         <img class="align-self-center" src="{{url('/img/correct.png')}}" style="width: 80px" alt="">
-                                        <p class="align-self-center">Pelaporan</p>
-                                    </div>
-                                </a>
-                                <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/pm-report')}}">
-                                    <div class="d-flex flex-column">
-                                        <img class="align-self-center" src="{{url('/img/list.png')}}" style="width: 80px" alt="">
-                                        <p class="align-self-center">Pelaporan Pegawai</p>
-                                    </div>
-                                </a>
-                                {{-- <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/kanban')}}">
-                                    <div class="d-flex flex-column">
-                                        <img class="align-self-center" src="{{url('/img/task.png')}}" style="width: 80px" alt="">
-                                        <p class="align-self-center">Kanban</p>
-                                    </div>
-                                </a>
-                                <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/my-profile')}}">
-                                    <div class="d-flex flex-column">
-                                        <img class="align-self-center" src="{{url('/img/user.png')}}" style="width: 80px" alt="">
-                                        <p class="align-self-center">Profil</p>
-                                    </div>
-                                </a>
-                                <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/news')}}">
-                                    <div class="d-flex flex-column">
-                                        <img class="align-self-center" src="{{url('/img/newspaper.png')}}" style="width: 80px" alt="">
-                                        <p class="align-self-center">Berita</p>
+                                        <p class="align-self-center">Pelaporan Harian</p>
                                     </div>
                                 </a> --}}
-                                {{-- <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/settings')}}">
+                                <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('list-officer')}}">
                                     <div class="d-flex flex-column">
-                                        <img class="align-self-center" src="{{url('/img/cog.png')}}" style="width: 80px" alt="">
-                                        <p class="align-self-center">Pengaturan</p>
+                                        <img class="align-self-center" src="{{url('/img/correct.png')}}" style="width: 80px" alt="">
+                                        <p class="align-self-center">Pelaporan Mingguan Pegawai</p>
                                     </div>
-                                </a> --}}
-                                {{-- <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/my-message')}}">
-                                    <div class="d-flex flex-column">
-                                        <img class="align-self-center" src="{{url('/img/bubble-chat.png')}}" style="width: 80px" alt="">
-                                        <p class="align-self-center">Pesan</p>
-                                    </div>
-                                </a> --}}
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-12 my-2">
-                <div class="card" style="background-color: #fff">
-                    <div class="card-body">
-                        Segera Hadir
-                    </div>
+                <div class="card">
+                    <div class="card-body">Segera Hadir</div>
                 </div>
             </div>
         </div>
@@ -293,64 +212,6 @@
                     },
                 },
             },
-        });
-    </script>
-    {{-- dynamic calendar --}}
-    <script>
-        const daysTag = document.querySelector(".calendar_days"),
-        currentDate = document.querySelector(".current-date"),
-        prevNextIcon = document.querySelectorAll(".icons span");
-
-        // getting new date, current year and month
-        let date = new Date(),
-        currYear = date.getFullYear(),
-        currMonth = date.getMonth();
-
-        // storing full name of all months in array
-        const months = ["January", "February", "March", "April", "May", "June", "July",
-                    "August", "September", "October", "November", "December"];
-
-        const renderCalendar = () => {
-            let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
-            lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
-            lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), // getting last day of month
-            lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
-            let liTag = "";
-
-            for (let i = firstDayofMonth; i > 0; i--) { // creating li of previous month last days
-                liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
-            }
-
-            for (let i = 1; i <= lastDateofMonth; i++) { // creating li of all days of current month
-                // adding active class to li if the current day, month, and year matched
-                let isToday = i === date.getDate() && currMonth === new Date().getMonth() 
-                            && currYear === new Date().getFullYear() ? "active" : "";
-                liTag += `<li class="${isToday}">${i}</li>`;
-            }
-
-            for (let i = lastDayofMonth; i < 6; i++) { // creating li of next month first days
-                liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`
-            }
-            currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
-            daysTag.innerHTML = liTag;
-        }
-        renderCalendar();
-
-        prevNextIcon.forEach(icon => { // getting prev and next icons
-            icon.addEventListener("click", () => { // adding click event on both icons
-                // if clicked icon is previous icon then decrement current month by 1 else increment it by 1
-                currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
-
-                if(currMonth < 0 || currMonth > 11) { // if current month is less than 0 or greater than 11
-                    // creating a new date of current year & month and pass it as date value
-                    date = new Date(currYear, currMonth, new Date().getDate());
-                    currYear = date.getFullYear(); // updating current year with new date year
-                    currMonth = date.getMonth(); // updating current month with new date month
-                } else {
-                    date = new Date(); // pass the current date as date value
-                }
-                renderCalendar(); // calling renderCalendar function
-            });
         });
     </script>
 @endpush

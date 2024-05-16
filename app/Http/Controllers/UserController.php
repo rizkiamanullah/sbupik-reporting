@@ -143,6 +143,7 @@ class UserController extends Controller
         $user_id = $_POST['user_id'];
         $rencana = $_POST['rencana'];
         $realisasi = $_POST['realisasi'];
+        $id_task = $_POST['id_task'];
 
         $today = DB::table('tb_daily_progress')
         ->where('id_user',$user_id)
@@ -171,6 +172,7 @@ class UserController extends Controller
         $insert = DB::table('tb_daily_progress')
         ->insert([
             'id_user' => $user_id,
+            'id_task' => $id_task,
             'date' => date('Y-m-d'),
             'progress' => json_encode([
                 'rencana' => $rencana,
