@@ -7,3 +7,4 @@ config/app.php
 /app
 .env
 /config
+/node_modules/*
