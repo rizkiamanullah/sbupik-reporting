@@ -27,6 +27,7 @@ use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\KanbanController;   
 use App\Http\Controllers\newsController;   
 use App\Http\Controllers\ProjectController;   
+use App\Http\Controllers\PMController;   
             
 
 	Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
@@ -42,32 +43,32 @@ use App\Http\Controllers\ProjectController;
 	Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
 	// end auth
 	
-	// kanban
-	Route::get('/getTask/{user_id}',[KanbanController::class,'getTask']);
-	Route::get('/getTaskDetail/{user_id}',[KanbanController::class,'getTaskDetail']);
-	Route::get('/getKomentarTask',[KanbanController::class,'getKomentarTask']);
-	Route::post('/saveTask/{user_id}',[KanbanController::class,'saveTask']);
-	Route::post('/switchTask/{user_id}',[KanbanController::class,'switchTask']);
-	Route::post('/archiveTask',[KanbanController::class,'archiveTask']);
-	Route::post('/saveKomentarTask',[KanbanController::class,'saveKomentarTask']);
-	// end kanban
+	// // kanban
+	// Route::get('/getTask/{user_id}',[KanbanController::class,'getTask']);
+	// Route::get('/getTaskDetail/{user_id}',[KanbanController::class,'getTaskDetail']);
+	// Route::get('/getKomentarTask',[KanbanController::class,'getKomentarTask']);
+	// Route::post('/saveTask/{user_id}',[KanbanController::class,'saveTask']);
+	// Route::post('/switchTask/{user_id}',[KanbanController::class,'switchTask']);
+	// Route::post('/archiveTask',[KanbanController::class,'archiveTask']);
+	// Route::post('/saveKomentarTask',[KanbanController::class,'saveKomentarTask']);
+	// // end kanban
 	
-	// sticky notes
-	Route::get('/getStickyNotes',[UserController::class,'getStickyNotes']);
-	Route::post('/saveStickyNotes',[UserController::class,'saveStickyNotes']);
-	Route::post('/deleteStickyNotes',[UserController::class,'deleteStickyNotes']);
-	// end sticky notes
+	// // sticky notes
+	// Route::get('/getStickyNotes',[UserController::class,'getStickyNotes']);
+	// Route::post('/saveStickyNotes',[UserController::class,'saveStickyNotes']);
+	// Route::post('/deleteStickyNotes',[UserController::class,'deleteStickyNotes']);
+	// // end sticky notes
 
-	// messaging
-	Route::get('/fetchMessages',[UserController::class,'fetchMessages']);
-	Route::post('/messaging',[UserController::class,'messaging']);
-	// end messaging
+	// // messaging
+	// Route::get('/fetchMessages',[UserController::class,'fetchMessages']);
+	// Route::post('/messaging',[UserController::class,'messaging']);
+	// // end messaging
 	
-	// news
-	Route::get('/fetchNews',[newsController::class,'fetchNews']);
-	Route::post('/storeNews',[newsController::class,'storeNews']);
-	Route::post('/archiveNews',[newsController::class,'archiveNews']);
-	// end news
+	// // news
+	// Route::get('/fetchNews',[newsController::class,'fetchNews']);
+	// Route::post('/storeNews',[newsController::class,'storeNews']);
+	// Route::post('/archiveNews',[newsController::class,'archiveNews']);
+	// // end news
 	
 	// crud row dynamic data
 	Route::get('/getAllRowData',[PageController::class,'getAllRowData']);
@@ -99,6 +100,9 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/kanban', [UserController::class, 'show'])->name('kanban');
 	Route::get('/kanban/archives', [UserController::class, 'showArchives'])->name('kanban');
 	// end kanban
+
+	Route::get('/officer/{id}', [PMController::class, 'officer'])->name('page');
+
 
 	Route::post('/profile', [UserController::class, 'update'])->name('profile.update');
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');

@@ -129,13 +129,19 @@ class PageController extends Controller
                 $dataUser = DB::table('users')
                 ->where('user_role_id', 1)
                 ->get();
-
-                $dataOther = DB::table("tb_daily_progress")
-                    ->where('id_user', Auth::user()->id)
-                    ->where('date','<',date('Y-m-d'))
-                    ->get();
-                return view("pages.{$page}", compact('dataUser', 'dataOther'));
+                return view("pages.{$page}", compact('dataUser'));
             }
+            // if ($page == "officer"){
+            //     $dataUser = DB::table('users')
+            //     ->where('user_role_id', 1)
+            //     ->get();
+    
+            //     $dataOther = DB::table("tb_daily_progress")
+            //         ->where('id_user', Auth::user()->id)
+            //         ->where('date','<',date('Y-m-d'))
+            //         ->get();
+            //     return view("pages.{$page}", compact('dataUser', 'dataOther'));
+            // }
         }
         return abort(404);
     }

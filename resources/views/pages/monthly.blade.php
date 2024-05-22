@@ -146,7 +146,6 @@
 @endsection
 
 @push('js')
-    <script src="./assets/js/plugins/chartjs.min.js"></script>
     <script>
         $(document).delegate('#mon','change',function(){
             window.location = "{{url('monthly?m=')}}"+$(this).val();

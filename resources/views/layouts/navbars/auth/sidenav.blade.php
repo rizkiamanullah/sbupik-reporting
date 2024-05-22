@@ -183,7 +183,7 @@
                     <span class="nav-link-text ms-1">Laman Utama</span>
                 </a>
             </li>
-            <li class="nav-item btn-outline-secondary">
+            {{-- <li class="nav-item btn-outline-secondary">
                 <a class="nav-link {{  str_contains(request()->url(), 'reporting') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'reporting']) }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -191,9 +191,9 @@
                     </div>
                     <span class="nav-link-text ms-1">Pelaporan</span>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item btn-outline-secondary">
-                <a class="nav-link {{ str_contains(request()->url(), 'pm-report') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'pm-report']) }}">
+                <a class="nav-link {{ str_contains(request()->url(), 'list-officer') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'list-officer']) }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-folder-17 text-dark text-sm opacity-10"></i>

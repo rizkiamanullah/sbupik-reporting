@@ -24,9 +24,9 @@
                         <h6>List Pegawai</h6>
                         <hr>
                         <div class="table-responsive">
-                            <table id="maintable" class="table table-striped table-bordered" style="width:100%">
+                            <table id="maintable" class="table table-striped table-bordered">
                                 <thead>
-                                    <th>No</th>
+                                    <th width="2%">No</th>
                                     <th>Nama</th>
                                     <th>NPP</th>
                                     <th>Action</th>
@@ -38,7 +38,7 @@
                                             <td>{{@$user->firstname}}</td>
                                             <td>{{@$user->npp}}</td>
                                             <td>
-                                                <a href="#" class="btn btn-sm bg-success text-white"><i class="fas fa-cursor"></i>&nbsp;Lihat</a>
+                                                <a href="{{url('/officer').'/'.$user->id}}" class="btn btn-sm bg-success text-white"><i class="fas fa-cursor"></i>&nbsp;Lihat</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -55,9 +55,11 @@
 
 @push('js')
     <script>
-    $.noConflict();
     $(document).ready(function(){
-        $('#mainTable').dataTable();
+        $('#maintable').dataTable({
+            processing: true,
+            // serverSide: true,
+        });
     });
     </script>
 @endpush
