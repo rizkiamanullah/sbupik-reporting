@@ -109,14 +109,14 @@
                                                     @foreach ($dataDaily as $daily)
                                                     <tr>
                                                         <td>{{date('d/m/Y', strtotime($daily->date))}}</td>
-                                                        <td>{{date('W', strtotime($daily->date)) % 4 + 1}} Bulan {{date('F', strtotime($daily->date))}}</td>
-                                                        <td>{!! (@json_decode(@$week->json_data, true)['rencana']) !!}</td>
-                                                        <td>{!! (@json_decode(@$week->json_data, true)['realisasi']) !!}</td>
+                                                        <td>Minggu {{date('W', strtotime($daily->date)) % 4 + 1}} dibulan {{date('m', strtotime($daily->date))}}</td>
+                                                        <td>{!! (@json_decode(@$daily->progress, true)['rencana']) !!}</td>
+                                                        <td>{!! (@json_decode(@$daily->progress, true)['realisasi']) !!}</td>
                                                     </tr>
                                                     @endforeach
                                                     @else
                                                     <tr>
-                                                        <td colspan="3" align="center">Belum ada rencana/ realisasi</td>
+                                                        <td colspan="4" align="center">Belum ada rencana/ realisasi</td>
                                                     </tr>
                                                     @endif
                                                 </tbody>
