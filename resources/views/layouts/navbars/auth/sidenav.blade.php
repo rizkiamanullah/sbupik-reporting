@@ -259,9 +259,9 @@
                 <a class="nav-link {{ str_contains(request()->url(), 'setting') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'setting/password']) }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-folder-17 text-dark text-sm opacity-10"></i>
+                        <i class="ni ni-settings text-dark text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Pengaturan</span>
+                    <span class="nav-link-text ms-1">Ubah Password</span>
                 </a>
             </li>
         </ul>

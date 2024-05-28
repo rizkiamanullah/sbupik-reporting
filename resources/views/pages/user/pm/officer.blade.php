@@ -165,7 +165,7 @@
     </script>
     <script>
         $(document).delegate('#mon','change',function(){
-            window.location = '{{url("officer/11?m=")}}'+$(this).val();
+            window.location = '{{url()->current()}}?m='+$(this).val();
         });
         $(document).delegate('.buat-lap','click',function(){
             $('input[name="weekNum"]').val($(this).data('week'));
