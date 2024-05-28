@@ -44,9 +44,7 @@ class LoginController extends Controller
             }
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        return back()->with(['msg' => 'Email/ Password tidak ditemukan']);
     }
 
     public function logout(Request $request)

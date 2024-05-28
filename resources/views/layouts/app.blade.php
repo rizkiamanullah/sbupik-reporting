@@ -108,7 +108,7 @@
     @if (session('msg'))
         <script>
             swal.fire({
-                title: "{{ __('Success!') }}",
+                title: "{{ __('Information') }}",
                 text: "{{ session('msg') }}",
                 type: "success"
             });

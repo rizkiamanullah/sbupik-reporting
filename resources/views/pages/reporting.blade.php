@@ -81,7 +81,7 @@
                                             <td><h6>Rencana Minggu Ini</h6></td>
                                         </tr>
                                         <tr>
-                                            <td><p class="text-break">{{strip_tags(json_decode(@$weekPlan->json_data, true)['rencana'])}}</p></td>
+                                            <td><p class="text-break">{{@$weekPlan->json_data ? @strip_tags(@json_decode(@$weekPlan->json_data, true)['rencana']) : "-"}}</p></td>
                                         </tr>
                                         <tr></tr>
                                     </table>
@@ -250,14 +250,27 @@
                     },
                     data: $('#modalForm').serialize(),
                     success: function(data){
-                        $('.modal-body').html('<img src="https://media.tenor.com/ogsClPgCYcAAAAAi/mochi-mochi-mochi.gif" width="250" style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);" />').hide().fadeIn(90);
-                        $('.modal-body').find('.page-1').addClass('d-none');
-                        setTimeout(function() {
-                            $('.modal').modal('hide');
-                        }, 2000);
-                        setTimeout(function() {
-                            window.location.reload();   
-                        }, 2500);
+                        // $('.modal-body').html('<img src="https://media.tenor.com/ogsClPgCYcAAAAAi/mochi-mochi-mochi.gif" width="250" style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);" />').hide().fadeIn(90);
+                        // $('.modal-body').find('.page-1').addClass('d-none');
+                        // setTimeout(function() {
+                        $('.modal').modal('hide');
+                        // }, 2000);
+                        // setTimeout(function() {
+                        // }, 2500);
+
+                        swal.fire({
+                            title: "{{ __('Success!') }}",
+                            text: "Catatan Tersimpan!",
+                            type: "success"
+                        });
+
+                        window.location.reload();   
+                    }, error: function(data){
+                        swal.fire({
+                            title: "{{ __('Failed') }}",
+                            text: "Catatan Gagal Tersimpan!",
+                            type: "failed"
+                        });
                     }
                 });
             } else {

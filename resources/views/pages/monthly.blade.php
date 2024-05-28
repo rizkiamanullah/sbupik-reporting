@@ -23,7 +23,7 @@
                         <input type="hidden" name="user_id" class="uid" value="{{ Auth::user()->id }}">
                         <input type="hidden" name="weekNum" class="weekNum" value="{{ Auth::user()->id }}">
                         <div>
-                            <h2>Rencana Minggu 1</h2><br>
+                            <h2 class="insert-title">Rencana</h2><br>
                             <textarea name="rencana_input" id="summernote" cols="30" rows="30" class="form-control"></textarea>
                         </div>
                     </div>
@@ -113,7 +113,7 @@
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td><p class="text-break">
-                                                                                        {{strip_tags(json_decode(@$dataToday->json_data, true)['rencana'])}}</td>
+                                                                                        {{@strip_tags(@json_decode(@$dataToday->json_data, true)['rencana'])}}</td>
                                                                                     </p>
                                                                                 </tr>
                                                                                 <tr></tr>
@@ -162,43 +162,6 @@
                 height: 250
             });
         });
-
-        // $(document).delegate('.buat-lap','click',function(){
-        //     $('.modal-body').find('.page-1').removeClass('d-none').hide().fadeIn(500);
-        //     $('.modal-body').find('.page-2').addClass('d-none');
-        // });
-        // $(document).delegate('.buat-lap-2','click',function(){
-        //     $('.modal-body').find('.page-2').removeClass('d-none').hide().fadeIn(500);
-        //     $('.modal-body').find('.page-1').addClass('d-none');
-        // });
-
-        // $(document).delegate('.pg2, .pg3','click',function(){
-        //     var plan = $('.plan').val();
-        //     var real = $('.real').val();
-        //     if (plan || real){
-        //         // saving
-        //         $.ajax({
-        //             url: "{{url('/reporting/save')}}",
-        //             method: "POST",
-        //             headers: {
-        //                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        //             },
-        //             data: $('#modalForm').serialize(),
-        //             success: function(data){
-        //                 $('.modal-body').html('<img src="https://media.tenor.com/ogsClPgCYcAAAAAi/mochi-mochi-mochi.gif" width="250" style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);" />').hide().fadeIn(90);
-        //                 $('.modal-body').find('.page-1').addClass('d-none');
-        //                 setTimeout(function() {
-        //                     $('.modal').modal('hide');
-        //                 }, 2000);
-        //                 setTimeout(function() {
-        //                     window.location.reload();   
-        //                 }, 2500);
-        //             }
-        //         });
-        //     } else {
-        //         $('.notif-danger').text("Isian tidak boleh kosong");
-        //     }
-        // });
 
         $('.tap-close').click(function(){
             $(this).hide();

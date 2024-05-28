@@ -50,32 +50,67 @@
                                 </option>
                             @endfor
                         </select>
+                        @php
+                            $m = date('Y-m-d', strtotime(date('Y-m-1')));
+                            if (@$_GET['m']){
+                                $m = date('Y-m-1', strtotime(@$_GET['m']));
+                            }
+                            $startWeekMon = date('W', strtotime($m));
+                        @endphp
                         <hr>
                         <div class="accordion accordion-flush" id="accordionFlushExample">
+                            @for ($ky = $startWeekMon; $ky < $startWeekMon+5; $ky++)
+                            @php
+                                $week = @$dataWeekly[$ky];
+                            @endphp
                             <div class="accordion-item border rounded">
-                                <h2 class="accordion-header" id="flush-headingOne">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                        <h6>Rencana Mingguan</h6>
+                                <h2 class="accordion-header" id="flush-heading{{$ky}}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$ky}}" aria-expanded="false" aria-controls="flush-collapse{{$ky}}">
+                                        <h6>Rencana Minggu ke-{{(int)$ky}}</h6>
                                     </button>
                                 </h2>
-                                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <div id="flush-collapse{{$ky}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$ky}}" data-bs-parent="#accordionFlushExample">
                                     <div class="accordion-body">
-                                        <div class="table-responsive">
+                                        <div class="table-responsive" style="overflow-x: auto">
                                             <table class="table table-striped table-bordered" style="width: 100%">
                                                 <thead>
-                                                    <th width="10%">Minggu</th>
-                                                    <th width="35%">Tanggal</th>
                                                     <th>Rencana</th>
                                                 </thead>
                                                 <tbody>
                                                     @if (count($dataWeekly) > 0)
-                                                    @foreach ($dataWeekly as $week)
                                                     <tr>
-                                                        <td>{{$week->weekNum % 4 + 1}}</td>
-                                                        <td>{{date('d/m/Y', strtotime(date('Y').'W'.$week->weekNum))}}</td>
-                                                        <td>{!! (json_decode($week->json_data, true)['rencana']) !!}</td>
+                                                        <td class="p-3">{!! $week ? @json_decode(@$week->json_data, true)['rencana'] : "-" !!}</td>
                                                     </tr>
-                                                    @endforeach
+                                                    <tr>
+                                                        <td>
+                                                            <div class="table-responsive" style="overflow-x: auto">
+                                                                <table class="table table-striped table-bordered" style="width: 100%">
+                                                                    <thead>
+                                                                        <th width="20%">Tanggal</th>
+                                                                        <th>Rencana</th>
+                                                                        <th>Realisasi</th>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @if (count($dataDaily) > 0)
+                                                                        @foreach ($dataDaily as $daily)
+                                                                        @if (date('W', strtotime($daily->date)) == @$week->weekNum)
+                                                                        <tr>
+                                                                            <td class="p-2">{{date('d/m/Y', strtotime($daily->date))}}</td>
+                                                                            <td class="p-2">{!! (@json_decode(@$daily->progress, true)['rencana']) !!}</td>
+                                                                            <td class="p-2">{!! (@json_decode(@$daily->progress, true)['realisasi']) !!}</td>
+                                                                        </tr>
+                                                                        @endif
+                                                                        @endforeach
+                                                                        @else
+                                                                        <tr>
+                                                                            <td colspan="4" align="center">Belum ada rencana/ realisasi</td>
+                                                                        </tr>
+                                                                        @endif
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                     @else
                                                     <tr>
                                                         <td colspan="3" align="center">Belum ada rencana</td>
@@ -87,8 +122,9 @@
                                     </div>
                                 </div>
                             </div>
+                            @endfor
                             <br>
-                            <div class="accordion-item border rounded">
+                            {{-- <div class="accordion-item border rounded">
                                 <h2 class="accordion-header" id="flush-headingTwo">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
                                         <h6>Rencana Harian</h6>
@@ -96,35 +132,9 @@
                                 </h2>
                                 <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
                                     <div class="accordion-body">
-                                        <div class="table-responsive" style="overflow-x: auto">
-                                            <table class="table table-striped table-bordered" style="width: 100%">
-                                                <thead>
-                                                    <th width="15%">Tanggal</th>
-                                                    <th width="15%">Minggu</th>
-                                                    <th>Rencana</th>
-                                                    <th>Realisasi</th>
-                                                </thead>
-                                                <tbody>
-                                                    @if (count($dataDaily) > 0)
-                                                    @foreach ($dataDaily as $daily)
-                                                    <tr>
-                                                        <td>{{date('d/m/Y', strtotime($daily->date))}}</td>
-                                                        <td>Minggu {{date('W', strtotime($daily->date)) % 4 + 1}} dibulan {{date('m', strtotime($daily->date))}}</td>
-                                                        <td>{!! (@json_decode(@$daily->progress, true)['rencana']) !!}</td>
-                                                        <td>{!! (@json_decode(@$daily->progress, true)['realisasi']) !!}</td>
-                                                    </tr>
-                                                    @endforeach
-                                                    @else
-                                                    <tr>
-                                                        <td colspan="4" align="center">Belum ada rencana/ realisasi</td>
-                                                    </tr>
-                                                    @endif
-                                                </tbody>
-                                            </table>
-                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             {{-- <div class="accordion-item">
                                 <h2 class="accordion-header" id="flush-headingThree">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use DB;
 use Illuminate\Support\Facades\Auth;
+use Hash;
 
 class UserController extends Controller
 {
@@ -240,7 +241,6 @@ class UserController extends Controller
 
     }
 
-
     public function reportOk(){
         $id = $_POST['id'];
         $this_report = DB::table('tb_daily_progress')
@@ -261,6 +261,30 @@ class UserController extends Controller
             if ($update) {
                 return ['status' => 200, 'success' => true, 'type' => 'update'];
             }
+        }
+    }
+
+    public function changePassword(){
+        $this_user_info = DB::table('users')->find(Auth::user()->id);
+
+        return view("pages.user.passwordChange",[$this_user_info]);
+    }
+
+    public function changePassword_post(Request $request){
+        $up = DB::table('users')
+        ->where('id', Auth::user()->id)
+        ->update([
+            'password' => Hash::make($_POST['passw']),
+        ]);
+        if ($up) {
+            Auth::logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect('/login')->with(['msg' => "Ubah Password Sukses"]);
+        } else {
+            return redirect()->back()->with(['msg' => "Ubah Password Gagal"]);
         }
     }
 }
