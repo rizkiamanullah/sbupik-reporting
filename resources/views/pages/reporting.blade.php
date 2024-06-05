@@ -153,58 +153,48 @@
                                         <div class="card" style="background-color: #eeeff3; height: auto">
                                             <div class="card-body">
                                                 @php
-                                                    $dayCounter = 1;
-                                                    $saidNum = ['One','Two','Three','Four','Five']
+                                                    $m = date('Y-m-d', strtotime(date('Y-m-1')));
+                                                    if (@$_GET['m']){
+                                                        $m = date('Y-m-1', strtotime(@$_GET['m']));
+                                                    }
+                                                    $startWeekMon = date('W', strtotime($m));
                                                 @endphp
-                                                <div class="accordion accordion-flush" id="accordionFlushExample">
-                                                @for ($week = 0; $week < 5; $week++)
-                                                    @php
-                                                        @$dataToday = DB::table('tb_daily_progress')
-                                                        ->where('id_user', Auth::user()->id)
-                                                        ->first();
-
-                                                        $staticstart = date('Y-m-d',strtotime('last saturday of previous month'));
-                                                        $staticend = date('Y-m-d',strtotime('first friday of next month'));    
-                                                    @endphp
-                                                    <div class="week{{$week}}">
+                                                <div class="accordion accordion-flush border" id="accordionFlushExample">
+                                                @for ($week = $startWeekMon; $week < $startWeekMon+5; $week++)
+                                                    <div class="week{{$week}}" style="background-color: #f2f2f2">
                                                         <div class="accordion-item">
-                                                            <h2 class="accordion-header" id="flush-heading{{$saidNum[$week]}}">
-                                                            <button class="accordion-button bg-white my-2 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$saidNum[$week]}}" aria-expanded="false" aria-controls="flush-collapse{{$saidNum[$week]}}">
-                                                                <h6>Minggu {{$week+1}}</h6>
-                                                            </button>
+                                                            <h2 class="accordion-header" id="flush-heading{{$week}}">
+                                                                <button class="accordion-button bg-white my-2 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$week}}" aria-expanded="false" aria-controls="flush-collapse{{$week}}">
+                                                                    <h6>Minggu {{$week+1}}</h6>
+                                                                </button>
                                                             </h2>
-                                                            <div id="flush-collapse{{$saidNum[$week]}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$saidNum[$week]}}" data-bs-parent="#accordionFlushExample">
-                                                            <div class="accordion-body">
-                                                                <div class="upper" style="overflow-x: auto; border-radius:15px;">
-                                                                    <div class="d-flex flex-col" style="width:auto">
-                                                                        <div class="d-flex">
-                                                                            @for ($i = 1; $i <= 7; $i++)
-                                                                            @php
-                                                                                @$iterDate = date('Y-m-d', strtotime($staticstart . '+'.$dayCounter.' day'));
-                                                                            @endphp
-                                                                            @if (date('m', strtotime(@$iterDate)) == date('m'))
-                                                                                <div class="card mx-2 btn-outline-dark">
-                                                                                    <div class="card-header">
-                                                                                        <h6 class="{{date('D', strtotime($iterDate)) == "Sun" || date('D', strtotime($iterDate)) == "Sat" ? 'text-danger' : ''}}">
-                                                                                            {{date('D', strtotime($iterDate))}}
-                                                                                        </h6>
-                                                                                        <hr>
-                                                                                    </div>
-                                                                                    <div class="card-body pt-0">
-                                                                                        <div class="px-4">
-                                                                                            <h1 class="{{date('D', strtotime($iterDate)) == "Sun" || date('D', strtotime($iterDate)) == "Sat" ? 'text-danger' : ''}}">{{date('d', strtotime(@$iterDate))}}</h1>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div> 
-                                                                            @endif
-                                                                            @php
-                                                                                $dayCounter++;
-                                                                            @endphp
-                                                                            @endfor
-                                                                        </div>
-                                                                    </div>
+                                                            <div id="flush-collapse{{$week}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$week}}" data-bs-parent="#accordionFlushExample">
+                                                                <div class="accordion-body bg-white rounded">
+                                                                    <table class="table table-striped table-bordered">
+                                                                        <thead>
+                                                                            <th>Tanggal</th>
+                                                                            <th>Rencana</th>
+                                                                            <th>Realisasi</th>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        @if (count($dataDaily) > 0)
+                                                                            @foreach ($dataDaily as $daily)
+                                                                                @if (date('W', strtotime($daily->date)) == @$week->weekNum)
+                                                                                <tr>
+                                                                                    <td class="p-2">{{date('d/m/Y', strtotime($daily->date))}}</td>
+                                                                                    <td class="p-2">{!! (@json_decode(@$daily->progress, true)['rencana']) !!}</td>
+                                                                                    <td class="p-2">{!! (@json_decode(@$daily->progress, true)['realisasi']) !!}</td>
+                                                                                </tr>
+                                                                                @endif
+                                                                            @endforeach
+                                                                        @else
+                                                                        <tr>
+                                                                            <td colspan="4" align="center">Belum ada rencana/ realisasi</td>
+                                                                        </tr>
+                                                                        @endif
+                                                                        </tbody>
+                                                                    </table>
                                                                 </div>
-                                                            </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -250,13 +240,7 @@
                     },
                     data: $('#modalForm').serialize(),
                     success: function(data){
-                        // $('.modal-body').html('<img src="https://media.tenor.com/ogsClPgCYcAAAAAi/mochi-mochi-mochi.gif" width="250" style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);" />').hide().fadeIn(90);
-                        // $('.modal-body').find('.page-1').addClass('d-none');
-                        // setTimeout(function() {
                         $('.modal').modal('hide');
-                        // }, 2000);
-                        // setTimeout(function() {
-                        // }, 2500);
 
                         swal.fire({
                             title: "{{ __('Success!') }}",
