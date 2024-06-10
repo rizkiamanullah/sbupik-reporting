@@ -28,10 +28,26 @@
                     '10' => 'Oktober',
                     '11' => 'September',
                     '12' => 'Desember',
-                ]
+                ];
+
+                // semoga ga bug
+                function WoM($date){
+                    $num = 1;
+                    $fD = date('Y-m-1', strtotime($date));
+                    for ($d = 1; $d < cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'))+1; $d++){
+                        if (date('N', strtotime(date('Y-m-'.$d))) == 6){
+                            $num +=1;
+                        }
+                        if (date('Y-m-'.$d) == date('Y-m-d')){
+                            break;
+                        }
+                    }
+                    return $num;
+                }
+
             @endphp
             <nav aria-label="breadcrumb">
-                <h5 class="text-dark mb-0">{{ $hari[date('D')]. ", ".date('d')." ".$bulan[date('m')]." ".date('Y') }} </h5><h1 id="txt"></h1>
+                <h5 class="text-dark mb-0">{{ $hari[date('D')]. ", ".date('d')." ".$bulan[date('m')]." ".date('Y') }} | (Minggu ke-{{WoM(date('Ymd'))}}) </h5><h1 id="txt"></h1>
             </nav>
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -50,26 +66,6 @@
                             </div>
                         </a>
                     </li>
-                    {{-- <li class="nav-item px-3 d-flex align-items-center">
-                        <a href="javascript:;" class="nav-link text-dark p-0">
-                            <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
-                        </a>
-                    </li> --}}
-                    {{-- <li class="nav-item dropdown pe-2 d-flex align-items-center">
-                        <a href="javascript:;" class="nav-link text-dark p-0" id="dropdownMenuButton"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-bell cursor-pointer"></i>
-                        </a>
-                        <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
-                            aria-labelledby="dropdownMenuButton">
-                            <li class="mb-2">
-                                <div class="row">
-                                    <div class="col-2">🔔</div>
-                                    <div class="col-10">Belum ada notifikasi</div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li> --}}
                 </ul>
             </div>
         </div>
@@ -85,7 +81,6 @@
     s = checkTime(s);
     document.getElementById('txt').innerHTML =  h + ":" + m + ":" + s + " WIB";    
     setTimeout(startTime, 1000);
-    // console.log(h + ":" + m + ":" + s);
     }
 
     function checkTime(i) {

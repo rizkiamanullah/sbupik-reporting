@@ -12,19 +12,13 @@
         }
     </style>
 
-    @php
-        @$weekPlan = DB::table('tb_weekly_progress')
-        ->where('id_user', Auth::user()->id)
-        ->where('weekNum',date('W'))
-        ->first();
-    @endphp
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
         <form action="{{url('/reporting/save')}}" id="modalForm" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id_task" value="{{@$weekPlan->id}}">
             <div class="modal-content">
-                <div class="modal-body" style="height: 80vh;">
+                <div class="modal-body" style="height: auto;">
                     <div class="container p-2">
                         @csrf
                         <input type="hidden" name="user_id" class="uid" value="{{ Auth::user()->id }}">
@@ -32,7 +26,26 @@
                             <h4><b>Hari ini,</b></h4>
                             <h6><b>rencana</b> saya hari ini adalah...</h6>
                             <label class="text-danger notif-danger"></label>
-                            <textarea name="rencana" placeholder="Tuliskan target hari ini" class="form-control plan" id="" cols="30" rows="10"></textarea>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <tbody id="tbod">
+                                        @for ($a = 0; $a < 2; $a++)
+                                        <tr>
+                                            <td>
+                                                <textarea {{$a > 0 ? "" : 'required'}} name="rencana[]" placeholder="{{$a > 0 ? "(Opsional)" : "Tuliskan rencana"}}" class="form-control plan" id="" cols="30" rows="2"></textarea>
+                                            </td>
+                                        </tr>
+                                        @endfor
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td><div class="add btn btn-sm bg-success text-white">Tambah Baris</div></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            
                             <div class="d-flex flex-row justify-content-between my-2">
                                 <div></div>
                                 <div style="background-color:tomato; border-radius:20px;" class="btn-outline-dark float-right pg2 btn-block p-3 text-white">OK</div>
@@ -46,7 +59,7 @@
                                             <td><h6>Rencana</h6></td>
                                         </tr>
                                         <tr>
-                                            <td>{{@json_decode($dataToday->progress, true)['rencana'] ?: "-"}}</td>
+                                            <td>{{@json_decode($dataToday->progress, true)['rencana'] ? (@json_decode($dataToday->progress, true)['rencana']) : "-"}}</td>
                                         </tr>
                                         <tr></tr>
                                     </table>
@@ -103,9 +116,12 @@
                                             <tr></tr>
                                         </table>
                                     </div>
-                                    <div class="col-sm-6 pb-2">
-                                        <div href="#" style="border-radius: 25px; background-color:yellowgreen" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="p-4 text-white btn-outline-dark buat-lap-2"><i class="fas fa-plus"></i>&nbsp;Buat Laporan Realisasi</div>
-                                    </div>
+                                    @if (date('H:i:s') >= "16:00:00")
+                                        <div class="col-sm-6 pb-2">
+                                            <div href="#" style="border-radius: 25px; background-color:yellowgreen" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="p-4 text-white btn-outline-dark buat-lap-2"><i class="fas fa-plus"></i>&nbsp;Buat Laporan Realisasi</div>
+                                        </div>
+                                    @else
+                                    @endif
                                     @else
                                     <div class="col-sm-6 pb-2">
                                         <table class="table table-striped table-bordered">
@@ -135,7 +151,7 @@
                                     @endif
                                 @endif
                             </div>
-                            <div class="row my-1">
+                            {{-- <div class="row my-1">
                                 <br>
                                 <hr>
                                 <br>
@@ -205,7 +221,7 @@
                                     </div>
 
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -226,6 +242,17 @@
             $('.modal-body').find('.page-2').removeClass('d-none').hide().fadeIn(500);
             $('.modal-body').find('.page-1').addClass('d-none');
         });
+
+        $(document).delegate(".add", 'click', function(){
+            let html = `
+                <tr>
+                    <td>
+                        <textarea name="rencana[]" placeholder="(Opsional)" class="form-control plan" id="" cols="30" rows="2"></textarea>
+                    </td>
+                </tr>
+            `;
+            $('#tbod').append(html);
+        })
 
         $(document).delegate('.pg2, .pg3','click',function(){
             var plan = $('.plan').val();

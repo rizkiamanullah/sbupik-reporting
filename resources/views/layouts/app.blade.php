@@ -7,7 +7,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="/img/character.png">
     <link rel="icon" type="image/png" href="/img/favicon.png">
     <title>
-        SUPERMAN - Sucofindo
+        Completion App - SBU PIK
     </title>
     
     <!--     Fonts and icons     -->

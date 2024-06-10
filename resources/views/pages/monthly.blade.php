@@ -70,6 +70,16 @@
                         <div class="py-2  mb-3">
                             <div class="card" style="background-color: #ffffff; height: auto">
                                 <div class="card-body">
+                                    <table class="table table-bordered table-striped">
+                                        <tr>
+                                            <td><h6>Rencana Minggu Ini</h6></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p class="text-break">{{@$weekPlan->json_data ? @strip_tags(@json_decode(@$weekPlan->json_data, true)['rencana']) : "-"}}</p></td>
+                                        </tr>
+                                        <tr></tr>
+                                    </table>
+                                    <br>
                                     <h5>{{date('F Y', strtotime($m))}}</h5>
                                     @php
                                         $dayCounter = 1;
@@ -95,7 +105,13 @@
                                                         <div class="upper" style="overflow-x: auto; border-radius:15px;">
                                                             <div class="" style="width:auto">
                                                                 @if (!@$dataToday)
-                                                                    @if ($startWeekNow == date('W'))
+                                                                    @if ($startWeekNow == date('W') || $startWeekNow == date('W') + 1)
+                                                                        {{-- @if (date('N') != 5)
+                                                                            <div class="col-sm-12 pb-2">
+                                                                                <p>Silahkan mengisi di Hari Jumat, {{date('d F Y', strtotime('next friday'))}}</p>
+                                                                            </div>
+                                                                        @else
+                                                                        @endif --}}
                                                                         <div class="col-sm-12 pb-2">
                                                                             <div href="#" style="border-radius: 25px; background-color:tomato" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-week="{{$startWeekNow}}" class="p-4 text-white btn-outline-dark buat-lap"><i class="fas fa-plus"></i>&nbsp;Buat Laporan!</div>
                                                                         </div>

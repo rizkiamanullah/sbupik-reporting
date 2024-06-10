@@ -145,6 +145,11 @@ class UserController extends Controller
         $rencana = $_POST['rencana'];
         $realisasi = $_POST['realisasi'];
         $id_task = $_POST['id_task'];
+        $blank_txt = "";
+
+        foreach($rencana as $k => $plan){
+            $blank_txt .= ($k+1).". ".$plan.". ";
+        }
 
         $today = DB::table('tb_daily_progress')
         ->where('id_user',$user_id)
@@ -176,7 +181,7 @@ class UserController extends Controller
             'id_task' => $id_task,
             'date' => date('Y-m-d'),
             'progress' => json_encode([
-                'rencana' => $rencana,
+                'rencana' => $blank_txt,
                 'datetime' => date('Y-m-d H:i:s'),
             ])
         ]);
