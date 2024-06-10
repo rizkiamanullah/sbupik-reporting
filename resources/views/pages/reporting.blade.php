@@ -120,7 +120,10 @@
                                         <div class="col-sm-6 pb-2">
                                             <div href="#" style="border-radius: 25px; background-color:yellowgreen" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="p-4 text-white btn-outline-dark buat-lap-2"><i class="fas fa-plus"></i>&nbsp;Buat Laporan Realisasi</div>
                                         </div>
-                                    @else
+                                        @else
+                                        <div class="col-sm-6 pb-2">
+                                            <div href="#" style="border-radius: 25px; background-color:gray" class="p-4 text-white btn-outline-dark bGray"><i class="fas fa-plus"></i>&nbsp;Buat Laporan Realisasi</div>
+                                        </div>
                                     @endif
                                     @else
                                     <div class="col-sm-6 pb-2">
@@ -243,6 +246,14 @@
             $('.modal-body').find('.page-1').addClass('d-none');
         });
 
+        $(document).delegate(".bGray", 'click', function(){
+            swal.fire({
+                title: "{{ __('Sabar Mas/ Mba') }}",
+                text: "Realisasi baru dapat diisi pukul 16:00 WIB",
+                type: "failed"
+            });
+        });
+
         $(document).delegate(".add", 'click', function(){
             let html = `
                 <tr>
@@ -252,7 +263,7 @@
                 </tr>
             `;
             $('#tbod').append(html);
-        })
+        });
 
         $(document).delegate('.pg2, .pg3','click',function(){
             var plan = $('.plan').val();

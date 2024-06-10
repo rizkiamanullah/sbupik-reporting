@@ -144,7 +144,7 @@ class UserController extends Controller
         $user_id = $_POST['user_id'];
         $rencana = $_POST['rencana'];
         $realisasi = $_POST['realisasi'];
-        $id_task = $_POST['id_task'];
+        $id_task = DB::table('tb_weekly_progress')->orderBy('id','desc')->first()->id;
         $blank_txt = "";
 
         foreach($rencana as $k => $plan){

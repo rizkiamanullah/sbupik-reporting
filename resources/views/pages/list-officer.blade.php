@@ -16,6 +16,7 @@
         }
     </style>
 
+    {{-- {{Session::get()}} --}}
     <div class="container-fluid fade-card my-3" style="height:auto;">
         <div class="row">
             <div class="col-sm-12">
@@ -24,7 +25,7 @@
                         <h6>List Pegawai</h6>
                         <hr>
                         <div class="table-responsive">
-                            <table id="maintable" class="table table-striped table-bordered">
+                            <table id="maintable" class="table table-striped table-bordered w-100" >
                                 <thead>
                                     <th width="2%">No</th>
                                     <th>Nama</th>
@@ -59,6 +60,7 @@
         $('#maintable').dataTable({
             processing: true,
             // serverSide: true,
+            scrollX: true,
         });
     });
     </script>
