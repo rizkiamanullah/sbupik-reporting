@@ -15,38 +15,37 @@ class PageController extends Controller
      * @param string $page
      * @return \Illuminate\View\View
      */
-
     
     public function index(string $page)
     {
-        // dd($page, view()->exists("pages.{$page}"));
         if (view()->exists("pages.{$page}")) {
+            $wom = $this->WoM(date('Ymd'));
             $data = [];
             $dataRoles = [];
             if (Auth::user()->user_role_id == 99){
                 if ($page == "project-management"){
                     $data = DB::table("projects")
                     ->get();
-                    return view("pages.{$page}", compact('data', 'dataRoles'));
+                    return view("pages.{$page}", compact('wom','data', 'dataRoles'));
                 }
                 if ($page == "user-management"){
                     $data = DB::table("users")
                     ->get();
                     $dataRoles = DB::table("user_roles")
                     ->get();
-                    return view("pages.{$page}", compact('data', 'dataRoles'));
+                    return view("pages.{$page}", compact('wom','data', 'dataRoles'));
 
                 }
                 if ($page == "customer-management"){
                     $data = DB::table("customers")
                     ->get();
-                    return view("pages.{$page}", compact('data', 'dataRoles'));
+                    return view("pages.{$page}", compact('wom','data', 'dataRoles'));
 
                 }
                 if ($page == "role-management"){
                     $data = DB::table("user_roles")
                     ->get();
-                    return view("pages.{$page}", compact('data', 'dataRoles'));
+                    return view("pages.{$page}", compact('wom','data', 'dataRoles'));
                 }
                 if ($page == "news-management") {
                     $news = DB::table('news')
@@ -55,14 +54,14 @@ class PageController extends Controller
                     $announ = DB::table('news')
                         ->where('type', 2)
                         ->get();
-                    return view("pages.{$page}", compact('news', 'announ'));
+                    return view("pages.{$page}", compact('wom','news', 'announ'));
                 }
                 if ($page == "my-message") {
                     $data = DB::table("users")
                         ->get();
                     $messages = DB::table('direct_messages')
                         ->get();
-                    return view("pages.{$page}", compact('data', 'messages'));
+                    return view("pages.{$page}", compact('wom','data', 'messages'));
 
                 }
             }
@@ -74,7 +73,7 @@ class PageController extends Controller
                 ->where('sender_user_id', Auth::user()->id)
                 ->orWhere('receiver_user_id', Auth::user()->id)
                 ->get();
-                return view("pages.{$page}", compact('data', 'messages'));
+                return view("pages.{$page}", compact('wom','data', 'messages'));
                 
             }
             if ($page == "news-management") {
@@ -84,12 +83,12 @@ class PageController extends Controller
                 $announ = DB::table('news')
                     ->where('type', 2)
                     ->get();
-                return view("pages.{$page}", compact('news', 'announ'));
+                return view("pages.{$page}", compact('wom','news', 'announ'));
             }
             if ($page == "project-management") {
                 $data = DB::table("projects")
                     ->get();
-                return view("pages.{$page}", compact('data', 'dataRoles'));
+                return view("pages.{$page}", compact('wom','data', 'dataRoles'));
             }
             if ($page == "reporting") {
                 $dataToday = DB::table("tb_daily_progress")
@@ -110,7 +109,7 @@ class PageController extends Controller
                 if (!@$weekPlan){
                     return redirect()->to('dashboard')->with(['msg' => 'Belum membuat rencana minggu ini!']);
                 }
-                return view("pages.{$page}", compact('dataToday', 'dataOther', 'dataDaily', 'weekPlan'));
+                return view("pages.{$page}", compact('wom','dataToday', 'dataOther', 'dataDaily', 'weekPlan'));
             }
             if ($page == "monthly") {
                 $dataToday = DB::table("tb_daily_progress")
@@ -125,7 +124,7 @@ class PageController extends Controller
                     ->where('id_user', Auth::user()->id)
                     ->where('weekNum', date('W'))
                     ->first();
-                return view("pages.{$page}", compact('dataToday', 'dataOther', 'weekPlan'));
+                return view("pages.{$page}", compact('wom','dataToday', 'dataOther', 'weekPlan'));
             }
             if ($page == "pm-report") {
                 $dataUser = DB::table('users')
@@ -137,31 +136,17 @@ class PageController extends Controller
                     ->where('id_user', Auth::user()->id)
                     ->where('date','<',date('Y-m-d'))
                     ->get();
-                return view("pages.{$page}", compact('dataUser', 'dataOther'));
+                return view("pages.{$page}", compact('wom','dataUser', 'dataOther'));
             }
             if ($page == "list-officer") {
                 $dataUser = DB::table('users')
                 ->where('user_role_id', 1)
                 ->get();
-                return view("pages.{$page}", compact('dataUser'));
+                return view("pages.{$page}", compact('wom','dataUser'));
             }
             if ($page == "uploadajax") {
-                // $dataUser = DB::table('users')
-                // ->where('user_role_id', 1)
-                // ->get();
                 return view("pages.{$page}");
             }
-            // if ($page == "officer"){
-            //     $dataUser = DB::table('users')
-            //     ->where('user_role_id', 1)
-            //     ->get();
-    
-            //     $dataOther = DB::table("tb_daily_progress")
-            //         ->where('id_user', Auth::user()->id)
-            //         ->where('date','<',date('Y-m-d'))
-            //         ->get();
-            //     return view("pages.{$page}", compact('dataUser', 'dataOther'));
-            // }
         }
         return abort(404);
     }

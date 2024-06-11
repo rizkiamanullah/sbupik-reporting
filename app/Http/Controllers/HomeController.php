@@ -25,6 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $wom = $this->WoM(date('Ymd'));
         @$curr_sticky_notes_db = DB::table("sticky_notes")
             ->where("user_id", Auth::user()->id)
             ->get();
@@ -42,12 +43,12 @@ class HomeController extends Controller
             
             // officer
         if (Auth::user()->user_role_id == 1){
-            return view('pages.user.officer.dashboard', compact('curr_sticky_notes_db','curr_board_db','curr_task_db', 'users','projects'));
+            return view('pages.user.officer.dashboard', compact('wom','curr_sticky_notes_db','curr_board_db','curr_task_db', 'users','projects'));
         }
             // pm/ higher
         if (Auth::user()->user_role_id > 1 && Auth::user()->user_role_id < 99){
-            return view('pages.user.pm.dashboard', compact('curr_sticky_notes_db', 'projects', 'users'));
+            return view('pages.user.pm.dashboard', compact('wom','curr_sticky_notes_db', 'projects', 'users'));
         }
-        return view('pages.admin.dashboard', compact('curr_sticky_notes_db', 'projects', 'users'));
+        return view('pages.admin.dashboard', compact('wom','curr_sticky_notes_db', 'projects', 'users'));
     }
 }

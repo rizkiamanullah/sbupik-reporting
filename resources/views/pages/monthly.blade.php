@@ -97,7 +97,7 @@
                                             <div class="accordion-item border rounded">
                                                 <h2 class="accordion-header" id="flush-heading{{$saidNum[$week]}}" style="background-color: #f2f2f2">
                                                     <button class="accordion-button btn-outline-light rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$saidNum[$week]}}" aria-expanded="false" aria-controls="flush-collapse{{$saidNum[$week]}}">
-                                                        <h6>Minggu {{$week+1}}</h6>
+                                                        <h6>Minggu {{$week+1}} &nbsp; {!!(!@$dataToday &&$startWeekNow == date('W') + 1) ? '<small class="bg-warning blink rounded px-2 py-1 text-white">Baru</small>' : ''!!}</h6>
                                                     </button>
                                                 </h2>
                                                 <div id="flush-collapse{{$saidNum[$week]}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$saidNum[$week]}}" data-bs-parent="#accordionFlushExample">
@@ -105,7 +105,7 @@
                                                         <div class="upper" style="overflow-x: auto; border-radius:15px;">
                                                             <div class="" style="width:auto">
                                                                 @if (!@$dataToday)
-                                                                    @if ($startWeekNow == date('W') || $startWeekNow == date('W') + 1)
+                                                                    @if ($startWeekNow == date('W') + 1)
                                                                         {{-- @if (date('N') != 5)
                                                                             <div class="col-sm-12 pb-2">
                                                                                 <p>Silahkan mengisi di Hari Jumat, {{date('d F Y', strtotime('next friday'))}}</p>
@@ -113,7 +113,7 @@
                                                                         @else
                                                                         @endif --}}
                                                                         <div class="col-sm-12 pb-2">
-                                                                            <div href="#" style="border-radius: 25px; background-color:tomato" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-week="{{$startWeekNow}}" class="p-4 text-white btn-outline-dark buat-lap"><i class="fas fa-plus"></i>&nbsp;Buat Laporan!</div>
+                                                                            <div href="#" style="border-radius: 25px; background-color:tomato" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-week="{{$startWeekNow}}" data-weekmon="{{$week+1}}" class="p-4 text-white btn-outline-dark buat-lap"><i class="fas fa-plus"></i>&nbsp;Buat Laporan!</div>
                                                                         </div>
                                                                     @else
                                                                         <div class="col-sm-12 pb-2">
@@ -168,8 +168,11 @@
         });
         $(document).delegate('.buat-lap','click',function(){
             $('input[name="weekNum"]').val($(this).data('week'));
+            $('.insert-title').text("Rencana Minggu "+$(this).data('weekmon'));
         });
-
+        (function blink(){
+            $('.blink').fadeOut(500).fadeIn(500, blink);
+        })();
     </script>
     <script>
         $.getScript('https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js', function () 

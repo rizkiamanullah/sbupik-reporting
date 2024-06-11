@@ -29,25 +29,9 @@
                     '11' => 'September',
                     '12' => 'Desember',
                 ];
-
-                // semoga ga bug
-                function WoM($date){
-                    $num = 1;
-                    $fD = date('Y-m-1', strtotime($date));
-                    for ($d = 1; $d < cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'))+1; $d++){
-                        if (date('N', strtotime(date('Y-m-'.$d))) == 6){
-                            $num +=1;
-                        }
-                        if (date('Y-m-'.$d) == date('Y-m-d')){
-                            break;
-                        }
-                    }
-                    return $num;
-                }
-
             @endphp
             <nav aria-label="breadcrumb">
-                <h5 class="text-dark mb-0">{{ $hari[date('D')]. ", ".date('d')." ".$bulan[date('m')]." ".date('Y') }} | (Minggu ke-{{WoM(date('Ymd'))}}) </h5><h1 id="txt"></h1>
+                <h5 class="text-dark mb-0">{{ $hari[date('D')]. ", ".date('d')." ".$bulan[date('m')]." ".date('Y') }} | (Minggu ke-{{$wom}}) </h5><h1 id="txt"></h1>
             </nav>
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">

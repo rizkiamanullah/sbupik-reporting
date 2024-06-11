@@ -19,7 +19,7 @@
                                 <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/monthly')}}">
                                     <div class="d-flex flex-column">
                                         <img class="align-self-center" src="{{url('/img/correct.png')}}" style="width: 80px" alt="">
-                                        <p class="align-self-center">Pelaporan Mingguan</p>
+                                        <p class="align-self-center blink">Pelaporan Mingguan</p>
                                     </div>
                                 </a>
                                 {{-- <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/project-management')}}">
@@ -123,7 +123,11 @@
         </div>
         @include('layouts.footers.auth.footer')
     </div>
+    <script>
+        (function blink(){
+            $('.blink').fadeOut(500).fadeIn(500, blink);
+        })();
+    </script>
 @endsection
-
 @push('js')
 @endpush

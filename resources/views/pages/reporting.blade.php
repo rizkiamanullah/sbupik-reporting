@@ -249,7 +249,7 @@
         $(document).delegate(".bGray", 'click', function(){
             swal.fire({
                 title: "{{ __('Sabar Mas/ Mba') }}",
-                text: "Realisasi baru dapat diisi pukul 16:00 WIB",
+                text: "Realisasi baru dapat diisi setelah pukul 16:00 WIB",
                 type: "failed"
             });
         });

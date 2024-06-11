@@ -55,73 +55,63 @@
                             if (@$_GET['m']){
                                 $m = date('Y-m-1', strtotime(@$_GET['m']));
                             }
-                            $startWeekMon = date('W', strtotime($m));
                         @endphp
                         <hr>
                         <div class="accordion accordion-flush" id="accordionFlushExample">
-                            @for ($ky = $startWeekMon; $ky < $startWeekMon+5; $ky++)
                             @php
-                                $week = @$dataWeekly[$ky];
+                                $startWeek = date('W', strtotime($m));
                             @endphp
-                            <div class="accordion-item border rounded">
-                                <h2 class="accordion-header" id="flush-heading{{$ky}}">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$ky}}" aria-expanded="false" aria-controls="flush-collapse{{$ky}}">
-                                        <h6>Rencana Minggu ke-{{(int)$ky}}</h6>
-                                    </button>
-                                </h2>
-                                <div id="flush-collapse{{$ky}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$ky}}" data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body">
-                                        <div class="table-responsive" style="overflow-x: auto">
-                                            <table class="table table-striped table-bordered" style="width: 100%">
-                                                <thead>
-                                                    <th>Rencana</th>
-                                                </thead>
-                                                <tbody>
-                                                    @if (count($dataWeekly) > 0)
-                                                    <tr>
-                                                        <td class="p-3">{!! $week ? @json_decode(@$week->json_data, true)['rencana'] : "-" !!}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="table-responsive" style="overflow-x: auto">
-                                                                <table class="table table-striped table-bordered" style="width: 100%">
-                                                                    <thead>
-                                                                        <th width="20%">Tanggal</th>
-                                                                        <th>Rencana</th>
-                                                                        <th>Realisasi</th>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        @if (count($dataDaily) > 0)
-                                                                        @foreach ($dataDaily  as $daily)
-                                                                        @if (date('W', strtotime($daily->date)) == @$week->weekNum)
-                                                                        <tr>
-                                                                            <td class="p-2">{{date('d/m/Y', strtotime($daily->date))}}</td>
-                                                                            <td class="p-2">{!! (@json_decode(@$daily->progress, true)['rencana']) !!}</td>
-                                                                            <td class="p-2">{!! (@json_decode(@$daily->progress, true)['realisasi']) !!}</td>
-                                                                        </tr>
-                                                                        @endif
-                                                                        @endforeach
-                                                                        @else
-                                                                        <tr>
-                                                                            <td colspan="4" align="center">Belum ada rencana/ realisasi</td>
-                                                                        </tr>
-                                                                        @endif
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    @else
-                                                    <tr>
-                                                        <td colspan="3" align="center">Belum ada rencana</td>
-                                                    </tr>
-                                                    @endif
-                                                </tbody>
-                                            </table>
+                            @for ($ky = 0; $ky < 5; $ky++)
+                                <div class="accordion-item border rounded">
+                                    <h2 class="accordion-header" id="flush-heading{{$ky}}">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$ky}}" aria-expanded="false" aria-controls="flush-collapse{{$ky}}">
+                                            <h6>Rencana Minggu ke-{{(int)$ky+1}}</h6>
+                                        </button>
+                                    </h2>
+                                    <div id="flush-collapse{{$ky}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$ky}}" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body">
+                                            <div class="table-responsive" style="overflow-x: auto">
+                                                <table class="table table-striped table-bordered w-100" >
+                                                    <thead>
+                                                        <tr style="background-color:#f2f2f2">
+                                                            <td colspan="3"><h6>Rencana</h6></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="3"> {!!(@json_decode(@$dataWeekly[$startWeek]->json_data, true)['rencana']) ?: " -"!!} </td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr><td colspan="3"></td></tr>
+                                                        <tr>
+                                                            <td><h6>Tanggal</h6></td>
+                                                            <td><h6>Rencana</h6></td>
+                                                            <td><h6>Realisasi</h6></td>
+                                                        </tr>
+                                                        @if (@$dataDaily[$dataWeekly[$startWeek]->id])
+                                                            @foreach (@$dataDaily[$dataWeekly[$startWeek]->id] as $daily)
+                                                                <tr>
+                                                                    <td> {{ (@json_decode(@$daily->progress, true)["datetime"] ? date('Y-m-d', strtotime($daily->date)) : " -") }} </td>
+                                                                    <td> {{ (@json_decode(@$daily->progress, true)["rencana"] ?: " -") }} </td>
+                                                                    <td> {{ (@json_decode(@$daily->progress, true)["realisasi"] ?: " -") }} </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        <tr><td colspan="3"></td></tr>
+                                                        @else
+                                                                <tr>
+                                                                    <td> -</td>
+                                                                    <td> -</td>
+                                                                    <td> -</td>
+                                                                </tr>
+                                                        @endif
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                @php
+                                    $startWeek += 1;
+                                @endphp
                             @endfor
                         </div>                        
                     </div>
