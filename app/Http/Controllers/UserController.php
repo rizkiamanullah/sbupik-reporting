@@ -145,11 +145,12 @@ class UserController extends Controller
         $rencana = $_POST['rencana'];
         $realisasi = $_POST['realisasi'];
         $id_task = DB::table('tb_weekly_progress')->orderBy('id','desc')->first()->id;
-        $blank_txt = "";
-
+        $blank_txt = "<ul>";
+        
         foreach($rencana as $k => $plan){
-            $blank_txt .= ($k+1).". ".$plan.". ";
+            $blank_txt .= "<li>".$plan."<\/li>";
         }
+        $blank_txt .= "<\/ul>";
 
         $today = DB::table('tb_daily_progress')
         ->where('id_user',$user_id)
