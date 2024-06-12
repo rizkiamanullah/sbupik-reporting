@@ -148,9 +148,9 @@ class UserController extends Controller
         $blank_txt = "<ul>";
         
         foreach($rencana as $k => $plan){
-            $blank_txt .= "<li>".$plan."<\/li>";
+            $blank_txt .= "<li>".$plan."</li>";
         }
-        $blank_txt .= "<\/ul>";
+        $blank_txt .= "</ul>";
 
         $today = DB::table('tb_daily_progress')
         ->where('id_user',$user_id)
