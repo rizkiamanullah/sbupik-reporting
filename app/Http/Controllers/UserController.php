@@ -151,15 +151,21 @@ class UserController extends Controller
             $blank_txt .= "<li>".$plan."</li>";
         }
         $blank_txt .= "</ul>";
-
+        
         $today = DB::table('tb_daily_progress')
         ->where('id_user',$user_id)
         ->where('date', date('Y-m-d'))
         ->first();
 
         if ($today){
+            $blank_txt = "<ul>";
+            foreach ($realisasi as $k => $plan) {
+                $blank_txt .= "<li>" . $plan . "</li>";
+            }
+            $blank_txt .= "</ul>";
+
             $progress = json_decode($today->progress, true);
-            $progress['realisasi'] = $realisasi;
+            $progress['realisasi'] = $blank_txt;
             $progress['datetime2'] = date('Y-m-d H:i:s');
 
             $update = DB::table('tb_daily_progress')

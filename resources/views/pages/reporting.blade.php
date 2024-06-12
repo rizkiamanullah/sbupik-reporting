@@ -94,7 +94,7 @@
                                             <td><h6>Rencana Minggu Ini</h6></td>
                                         </tr>
                                         <tr>
-                                            <td><p class="text-break">{{@$weekPlan->json_data ? @strip_tags(@json_decode(@$weekPlan->json_data, true)['rencana']) : "-"}}</p></td>
+                                            <td><p class="text-break">{!!@$weekPlan->json_data ? (@json_decode(@$weekPlan->json_data, true)['rencana']) : "-"!!}</p></td>
                                         </tr>
                                         <tr></tr>
                                     </table>
