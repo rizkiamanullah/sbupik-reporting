@@ -111,7 +111,7 @@
                                                 <td><h6>Rencana</h6></td>
                                             </tr>
                                             <tr>
-                                                <td>{{@json_decode($dataToday->progress, true)['rencana'] ?: "-"}}</td>
+                                                <td>{!!@json_decode($dataToday->progress, true)['rencana'] ?: "-"!!}</td>
                                             </tr>
                                             <tr></tr>
                                         </table>
@@ -132,7 +132,7 @@
                                                 <td><h6>Rencana</h6></td>
                                             </tr>
                                             <tr>
-                                                <td>{{@json_decode($dataToday->progress, true)['rencana'] ?: "-"}}</td>
+                                                <td>{!!@json_decode($dataToday->progress, true)['rencana'] ?: "-"!!}</td>
                                             </tr>
                                             <tr></tr>
                                         </table>
@@ -143,7 +143,7 @@
                                                 <td><h6>Realisasi</h6></td>
                                             </tr>
                                             <tr>
-                                                <td>{{@json_decode($dataToday->progress, true)['realisasi'] ?: "-"}}</td>
+                                                <td>{!!@json_decode($dataToday->progress, true)['realisasi'] ?: "-"!!}</td>
                                             </tr>
                                             <tr></tr>
                                         </table>
