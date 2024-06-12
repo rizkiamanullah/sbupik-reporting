@@ -41,10 +41,10 @@
                                     </form>
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
-                                    <p class="mb-1 text-sm mx-auto">
+                                    {{-- <p class="mb-1 text-sm mx-auto">
                                         Lupa Password? Reset password anda 
-                                        <a href="{{ route('reset-password') }}" class="text-primary text-gradient font-weight-bold">disini</a>
-                                    </p>
+                                        <a href="{{ url('setting/password') }}" class="text-primary text-gradient font-weight-bold">disini</a>
+                                    </p> --}}
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                     <p class="mb-4 text-sm mx-auto">

@@ -102,6 +102,9 @@ Route::group(['middleware' => 'auth'], function () {
 	// end kanban
 
 	Route::get('/officer/{id}', [PMController::class, 'officer'])->name('page');
+	Route::post('/rekap/{officer_id}/{tahun}/{bulan}', [PMController::class, 'rekap']);
+	Route::post('/rekap/{officer_id}/all', [PMController::class, 'rekapAll']);
+
 	Route::get('/setting/password', [UserController::class, 'changePassword']);
 	Route::post('/setting/password/save', [UserController::class, 'changePassword_post']);
 

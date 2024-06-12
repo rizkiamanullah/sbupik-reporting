@@ -39,23 +39,72 @@
                     </div>
                 </div>
             </div>
+            <div class="col-sm-12 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <table class="table table-bordered table-striped text-dark" style="background-color: #c9ead9">
+                                <tr>
+                                    <td><h6>Rencana Minggu Ini</h6></td>
+                                </tr>
+                                <tr>
+                                    <td><p class="text-break">{!!@$weekPlan->json_data ? (@json_decode(@$weekPlan->json_data, true)['rencana']) : "-"!!}</p></td>
+                                </tr>
+                                <tr></tr>
+                            </table>
+                            <hr>
+                            <table class="table table-bordered table-striped text-dark" style="background-color: #dcc1e0">
+                                <tr>
+                                    <td><h6>Rencana Minggu Depan</h6></td>
+                                </tr>
+                                <tr>
+                                    <td><p class="text-break">{!!@$weekPlanNext->json_data ? (@json_decode(@$weekPlanNext->json_data, true)['rencana']) : "-"!!}</p></td>
+                                </tr>
+                                <tr></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @php
+                $m = date('Y-m-d', strtotime(date('Y-m-1')));
+                if (@$_GET['m']){
+                    $m = date('Y-m-1', strtotime(@$_GET['m']));
+                }
+            @endphp
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <h6>Pilih Bulan</h6>
-                        <select name="mon" id="mon" class="form-control select2 text-bold">
-                            @for ($mon=0; $mon < 12; $mon++)
-                                <option {{@$_GET['m'] == date('Y-m', strtotime('-'.$mon.' month')) ? "selected" : ""}} value="{{date('Y-m', strtotime('-'.$mon.' month'))}}">
-                                    {{date('F Y', strtotime('-'.$mon.' month'))}}
-                                </option>
-                            @endfor
-                        </select>
-                        @php
-                            $m = date('Y-m-d', strtotime(date('Y-m-1')));
-                            if (@$_GET['m']){
-                                $m = date('Y-m-1', strtotime(@$_GET['m']));
-                            }
-                        @endphp
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h6>Pilih Bulan</h6>
+                                <select name="mon" id="mon" class="form-control text-bold h-auto">
+                                    @for ($mon=0; $mon < 12; $mon++)
+                                        <option {{@$_GET['m'] == date('Y-m', strtotime('-'.$mon.' month')) ? "selected" : ""}} value="{{date('Y-m', strtotime('-'.$mon.' month'))}}">
+                                            {{date('F Y', strtotime('-'.$mon.' month'))}}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="d-flex flex-row">
+                                    <div class="mx-2">
+                                        <h6>&nbsp;</h6>
+                                        <form action="{{url('rekap/'.$dataOfficer->id.'/'.date('Y/m',strtotime($m)))}}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success"><i class="fas fa-file-pdf"></i>&nbsp; Download Bulan Ini</button>
+                                        </form>
+                                    </div>
+                                    <div class="mx-2">
+                                        <h6>&nbsp;</h6>
+                                        <form action="{{url('rekap/'.$dataOfficer->id.'/all')}}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-info"><i class="fas fa-file-pdf"></i>&nbsp; Download All</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <hr>
                         <div class="accordion accordion-flush" id="accordionFlushExample">
                             @php
@@ -72,20 +121,20 @@
                                         <div class="accordion-body">
                                             <div class="table-responsive" style="overflow-x: auto">
                                                 <table class="table table-striped table-bordered w-100" >
-                                                    <thead>
-                                                        <tr style="background-color:#f2f2f2">
+                                                    <thead style="background-color: #fdffb6">
+                                                        <tr style="background-color:#f2f2f2;">
                                                             <td colspan="3"><h6>Rencana</h6></td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="3"> {!!(@json_decode(@$dataWeekly[$startWeek]->json_data, true)['rencana']) ?: " -"!!} </td>
                                                         </tr>
+                                                        <tr><td colspan="3" class="d-none">{!!@json_decode(@$dataWeekly[$startWeek]->json_data, true)['rencana'] ? '<div class="btn btn-success btn-block"><i class="fa fa-check"></i>&nbsp;Dimengerti</div>' : '' !!}</td></tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr><td colspan="3"></td></tr>
                                                         <tr>
-                                                            <td><h6>Tanggal</h6></td>
-                                                            <td><h6>Rencana</h6></td>
-                                                            <td><h6>Realisasi</h6></td>
+                                                            <td><h6> Tanggal</h6></td>
+                                                            <td><h6> Rencana</h6></td>
+                                                            <td><h6> Realisasi</h6></td>
                                                         </tr>
                                                         @if (@$dataDaily[$dataWeekly[$startWeek]->id])
                                                             @foreach (@$dataDaily[$dataWeekly[$startWeek]->id] as $daily)
@@ -125,6 +174,7 @@
 @push('js')
     <script>
     $(document).ready(function(){
+        $('.select2').select2();
         $('#maintable').dataTable({
             processing: true,
             // serverSide: true,

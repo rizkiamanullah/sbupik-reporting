@@ -70,12 +70,12 @@
                         <div class="py-2  mb-3">
                             <div class="card" style="background-color: #ffffff; height: auto">
                                 <div class="card-body">
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped text-dark" style="background-color: #c9ead9">
                                         <tr>
                                             <td><h6>Rencana Minggu Ini</h6></td>
                                         </tr>
                                         <tr>
-                                            <td><p class="text-break">{{@$weekPlan->json_data ? @strip_tags(@json_decode(@$weekPlan->json_data, true)['rencana']) : "-"}}</p></td>
+                                            <td><p class="text-break">{!!@$weekPlan->json_data ? (@json_decode(@$weekPlan->json_data, true)['rencana']) : "-"!!}</p></td>
                                         </tr>
                                         <tr></tr>
                                     </table>
@@ -97,7 +97,7 @@
                                             <div class="accordion-item border rounded">
                                                 <h2 class="accordion-header" id="flush-heading{{$saidNum[$week]}}" style="background-color: #f2f2f2">
                                                     <button class="accordion-button btn-outline-light rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$saidNum[$week]}}" aria-expanded="false" aria-controls="flush-collapse{{$saidNum[$week]}}">
-                                                        <h6>Minggu {{$week+1}} &nbsp; {!!(!@$dataToday &&$startWeekNow == date('W') + 1) ? '<small class="bg-warning blink rounded px-2 py-1 text-white">Baru</small>' : ''!!}</h6>
+                                                        <h6>Minggu {{$week+1}} &nbsp; {!!(!@$dataToday &&$startWeekNow == date('W') + 1) ? '<small class="bg-warning blink rounded px-2 py-1 text-white">Baru</small>' : ''!!} </h6>
                                                     </button>
                                                 </h2>
                                                 <div id="flush-collapse{{$saidNum[$week]}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$saidNum[$week]}}" data-bs-parent="#accordionFlushExample">
@@ -123,16 +123,16 @@
                                                                 @else
                                                                     <div class="col-sm-12 pb-2">
                                                                         <div style="border-radius: 3px;" class="p-2 text-dark bg-white">
-                                                                            <table class="table table-bordered" style="width: 100%">
+                                                                            <table class="table rounded text-dark" style="width: 100%; background-color:#fdffb6">
                                                                                 <tr>
-                                                                                    <td><h6 for="">{{date('d F Y', strtotime(date('Y')."W".$startWeekNow))}} - {{date('d F Y', strtotime(date('Y')."W".$startWeekNow." + 6 days"))}}</h6></td>
+                                                                                    <td><h6 for="">{{date('d F Y', strtotime(date('Y')."W".$startWeekNow))}} - {{date('d F Y', strtotime(date('Y')."W".$startWeekNow." + 6 days"))}}<i class="p-2 fa fa-check-circle"></h6></td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td><p class="text-break">
-                                                                                        {{@strip_tags(@json_decode(@$dataToday->json_data, true)['rencana'])}}</td>
+                                                                                        {!!(@json_decode(@$dataToday->json_data, true)['rencana'])!!}</td>
                                                                                     </p>
                                                                                 </tr>
-                                                                                <tr></tr>
+                                                                                <tr></i></tr>
                                                                             </table>
                                                                         </div>
                                                                     </div>

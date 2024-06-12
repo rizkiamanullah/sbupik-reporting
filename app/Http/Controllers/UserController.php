@@ -202,7 +202,6 @@ class UserController extends Controller
         ->where('id_user',$user_id)
         ->where('year',date('Y'))
         ->where('weekNum',$weekNum)
-        // ->where('date', date('Y-m-d'))
         ->first();
 
         if ($today){
@@ -211,7 +210,6 @@ class UserController extends Controller
 
             $update = DB::table('tb_weekly_progress')
             ->where('id_user',$user_id)
-            // ->where('date',date('Y-m-d'))
             ->where('year', date('Y'))
             ->where('weekNum', $weekNum)
             ->update([
@@ -220,7 +218,6 @@ class UserController extends Controller
             ]);
 
             if ($update){
-                // return ['status' => 200, 'success' => true, 'type' => 'update'];
                 return redirect()->to('/monthly')->with(['msg' => 'Pelaporan Mingguan Tersimpan!']);
             }
             return ['status' => 203, 'success' => false, 'type' => 'update'];
@@ -238,8 +235,13 @@ class UserController extends Controller
             ])
         ]);
 
+        DB::table('users')
+        ->where('id', $user_id)
+        ->update([
+            'json_details' => 1,
+        ]);
+        
         if ($insert){
-            // return ['status' => 200, 'success' => true, 'type' => 'insert'];
             return redirect()->to('/monthly')->with(['msg' => 'Pelaporan Mingguan Tersimpan!']);
         }
         return ['status' => 203, 'success' => false, 'type' => 'insert'];
@@ -271,8 +273,9 @@ class UserController extends Controller
 
     public function changePassword(){
         $this_user_info = DB::table('users')->find(Auth::user()->id);
+        $wom = $this->WoM(date('Ymd'));
 
-        return view("pages.user.passwordChange",[$this_user_info]);
+        return view("pages.user.passwordChange",compact('this_user_info', 'wom'));
     }
 
     public function changePassword_post(Request $request){
