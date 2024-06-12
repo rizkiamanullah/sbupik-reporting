@@ -140,8 +140,8 @@
                                                             @foreach (@$dataDaily[$dataWeekly[$startWeek]->id] as $daily)
                                                                 <tr>
                                                                     <td> {{ (@json_decode(@$daily->progress, true)["datetime"] ? date('Y-m-d', strtotime($daily->date)) : " -") }} </td>
-                                                                    <td> {{ (@json_decode(@$daily->progress, true)["rencana"] ?: " -") }} </td>
-                                                                    <td> {{ (@json_decode(@$daily->progress, true)["realisasi"] ?: " -") }} </td>
+                                                                    <td> {!! (@json_decode(@$daily->progress, true)["rencana"] ?: " -") !!} </td>
+                                                                    <td> {!! (@json_decode(@$daily->progress, true)["realisasi"] ?: " -") !!} </td>
                                                                 </tr>
                                                             @endforeach
                                                         <tr><td colspan="3"></td></tr>
