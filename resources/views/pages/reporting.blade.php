@@ -4,227 +4,214 @@
     @include('layouts.navbars.auth.topnav', ['title' => 'Dashboard'])
     <style>
         td {
-        white-space: normal !important; 
+        white-space: nowrap !important; 
         word-wrap: break-word;  
         }
         table {
-        table-layout: fixed;
+        table-layout:auto;
         }
     </style>
 
     <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-        <form action="{{url('/reporting/save')}}" id="modalForm" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="id_task" value="{{@$weekPlan->id}}">
-            <div class="modal-content">
-                <div class="modal-body" style="height: auto;">
-                    <div class="container p-2">
-                        @csrf
-                        <input type="hidden" name="user_id" class="uid" value="{{ Auth::user()->id }}">
-                        <div class="page-1 p-4 d-none">
-                            <h4><b>Hari ini,</b></h4>
-                            <h6><b>rencana</b> saya hari ini adalah...</h6>
-                            <label class="text-danger notif-danger"></label>
-
+    {{-- Modal Rencana --}}
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <form id="formRencanaMingguan" method="POST">
+                @csrf
+                <div class="modal-content">
+                <div class="modal-header" style="background-color: #679186">
+                    <h5 class="modal-title text-white" id="exampleModalLongTitle">Rencana Mingguan</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 justify-content-center">
                             <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <tbody id="tbod">
-                                        @for ($a = 0; $a < 2; $a++)
-                                        <tr>
-                                            <td>
-                                                <textarea {{$a > 0 ? "" : 'required'}} name="rencana[]" placeholder="{{$a > 0 ? "(Opsional)" : "Tuliskan rencana"}}" class="form-control plan" id="" cols="30" rows="2"></textarea>
-                                            </td>
-                                        </tr>
-                                        @endfor
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td><div class="add btn btn-sm bg-success text-white">Tambah Baris</div></td>
-                                        </tr>
-                                    </tfoot>
+                                <table class="table">
+                                    <tr>
+                                        <td width="15%">
+                                            <h6 for="input_minggu_ke">Minggu Ke- <span style="color: red">*</span></h6>
+                                        </td>
+                                        <td width="45%">
+                                            <select name="input_minggu_ke" id="input_minggu_ke" class="form-control">
+                                                @for ($y = date('W'); $y <= date('W'); $y++)
+                                                <option value="{{$y}}">{{$y}}</option>
+                                                @endfor
+                                            </select>
+                                        </td>
+                                        <td width="20%">
+                                            <select name="input_tahun_ke" id="input_tahun_ke" class="form-control">
+                                                @for ($y = 2024; $y <= date('Y'); $y++)
+                                                <option value="{{$y}}">{{$y}}</option>
+                                                @endfor
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><h6>Nama Atasan</h6></td>
+                                        <td colspan="2"><input type="text" readonly value="Hendro Purwono" class="form-control"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><h6>Organisasi Atasan</h6></td>
+                                        <td colspan="2"><input type="text" readonly value="Bagian Fasilitasi Perdagangan" class="form-control"></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="2">
+                                            <div class="form-group form-check">
+                                                <input type="checkbox" name="input_terdapat_cuti" class="form-check-input cuti" id="exampleCheck1">
+                                                <label class="form-check-label" for="exampleCheck1">Ada Rencana Cuti pada Minggu Ini</label>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
-                            
-                            <div class="d-flex flex-row justify-content-between my-2">
-                                <div></div>
-                                <div style="background-color:tomato; border-radius:20px;" class="btn-outline-dark float-right pg2 btn-block p-3 text-white">OK</div>
-                            </div>
                         </div>
-                        <div class="page-2 p-4">
-                            <div style="height:auto; overflow-y:auto;">
-                                <div>
-                                    <table class="table table-striped table-bordered">
-                                        <tr>
-                                            <td><h6>Rencana</h6></td>
+                        <hr>
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped" style="width:100%">
+                                    <tbody>
+                                        <tr style="background-color: #f2f2f2">
+                                            <td width="15%"><h6>Rencana <span style="color: red">*</span></h6></td>
                                         </tr>
                                         <tr>
-                                            <td>{{@json_decode($dataToday->progress, true)['rencana'] ? (@json_decode($dataToday->progress, true)['rencana']) : "-"}}</td>
+                                            <td width="100%">
+                                                <textarea name="input_rencana[]" cols="5" rows="10" class="form-control summernote"></textarea>
+                                            </td>
                                         </tr>
-                                        <tr></tr>
-                                    </table>
-                                </div>
-                                <h4><b>Hari ini,</b></h4>
-                                <h6><b>realisasi</b> saya hari ini adalah...</h6>
-                                <textarea name="realisasi" placeholder="Tuliskan realisasi hari ini" class="form-control real" id="" cols="30" rows="10"></textarea>
+                                        <tr style="background-color: #f2f2f2">
+                                            <td><h6>Output <span style="color: red;">*</span></h6></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea name="input_output_rencana[]" cols="5" rows="10" class="form-control summernote"></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr><td></td></tr>
+                                    </tbody>
+                                </table>                        
                             </div>
-                            <div class="d-flex flex-row justify-content-between my-2">
-                                <div></div>
-                                <div style="background-color:tomato; border-radius:20px;" class="pg3 btn-outline-dark float-right btn-block p-3 text-white">OK</div>
+                            <div class="form-group form-check">
+                                <input checked type="checkbox" name="input_rencana_sebagai_draft" class="form-check-input cuti" id="exampleCheck1">
+                                <label class="form-check-label" for="exampleCheck1">Simpan sebagai draft</label>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+                </div>
+            </form>
         </div>
     </div>
-    <!-- Modal -->
     
     <div class="container-fluid fade-card my-3">
         <div class="row">
             <div class="col-lg-12 my-3">
-                <div class="card" style="background-color: #fff">
-                    <div class="card-body">
-                        <div class="">
-                            <div class="row">
-                                <div class="col-sm-12 py-2">
-                                    <table class="table table-bordered table-striped">
-                                        <tr>
-                                            <td><h6>Rencana Minggu Ini</h6></td>
-                                        </tr>
-                                        <tr>
-                                            <td><p class="text-break">{!!@$weekPlan->json_data ? (@json_decode(@$weekPlan->json_data, true)['rencana']) : "-"!!}</p></td>
-                                        </tr>
-                                        <tr></tr>
-                                    </table>
-                                </div>
-                                @if (!@$dataToday)
-                                <div class="col-sm-6 pb-2">
-                                    <div href="#" style="border-radius: 25px; background-color:tomato" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="p-4 text-white btn-outline-dark buat-lap"><i class="fas fa-plus"></i>&nbsp;Buat Laporan Target</div>
-                                </div>
-                                @else
-                                @if (!@$dataToday->done_for_today)
-                                    <div class="col-sm-6 pb-2">
-                                        <table class="table table-striped table-bordered">
-                                            <tr>
-                                                <td><h6>Rencana</h6></td>
-                                            </tr>
-                                            <tr>
-                                                <td>{!!@json_decode($dataToday->progress, true)['rencana'] ?: "-"!!}</td>
-                                            </tr>
-                                            <tr></tr>
-                                        </table>
-                                    </div>
-                                    @if (date('H:i:s') >= "16:00:00")
-                                        <div class="col-sm-6 pb-2">
-                                            <div href="#" style="border-radius: 25px; background-color:yellowgreen" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="p-4 text-white btn-outline-dark buat-lap-2"><i class="fas fa-plus"></i>&nbsp;Buat Laporan Realisasi</div>
-                                        </div>
-                                        @else
-                                        <div class="col-sm-6 pb-2">
-                                            <div href="#" style="border-radius: 25px; background-color:gray" class="p-4 text-white btn-outline-dark bGray"><i class="fas fa-plus"></i>&nbsp;Buat Laporan Realisasi</div>
-                                        </div>
-                                    @endif
-                                    @else
-                                    <div class="col-sm-6 pb-2">
-                                        <table class="table table-striped table-bordered">
-                                            <tr>
-                                                <td><h6>Rencana</h6></td>
-                                            </tr>
-                                            <tr>
-                                                <td>{!!@json_decode($dataToday->progress, true)['rencana'] ?: "-"!!}</td>
-                                            </tr>
-                                            <tr></tr>
-                                        </table>
-                                    </div>
-                                    <div class="col-sm-6 pb-2">
-                                        <table class="table table-striped table-bordered">
-                                            <tr>
-                                                <td><h6>Realisasi</h6></td>
-                                            </tr>
-                                            <tr>
-                                                <td>{!!@json_decode($dataToday->progress, true)['realisasi'] ?: "-"!!}</td>
-                                            </tr>
-                                            <tr></tr>
-                                        </table>
-                                    </div>
-                                    <div class="col-sm-12 pb-2">
-                                        <div href="#" style="border-radius: 25px; background-color:grey" class="p-4 text-white btn-outline-dark tap-close">Terima kasih. Anda sudah melapor hari ini 🙏🙏🙏</div>
-                                    </div>
-                                    @endif
-                                @endif
-                            </div>
-                            {{-- <div class="row my-1">
-                                <br>
-                                <hr>
-                                <br>
-                                <h4>Rekap Kegiatan Harian di Bulan {{date('F Y')}}</h4>
-                                <div class="col-sm-12" style="height: 60vh; border-radius:15px; border-color:grey; border-width:0.5px;" >
-                                
-                                    <div class="py-2  mb-3">
-                                        @php
-                                            $m = date('Y-m');
-                                            if (@$_GET['m']){
-                                                $m = $_GET['m'];
-                                            }
-                                            $startWeekNow = date('W', strtotime($m));
-                                        @endphp
-                                        <div class="card" style="background-color: #eeeff3; height: auto">
-                                            <div class="card-body">
-                                                @php
-                                                    $m = date('Y-m-d', strtotime(date('Y-m-1')));
-                                                    if (@$_GET['m']){
-                                                        $m = date('Y-m-1', strtotime(@$_GET['m']));
-                                                    }
-                                                    $startWeekMon = date('W', strtotime($m));
-                                                @endphp
-                                                <div class="accordion accordion-flush border" id="accordionFlushExample">
-                                                @for ($week = $startWeekMon; $week < $startWeekMon+5; $week++)
-                                                    <div class="week{{$week}}" style="background-color: #f2f2f2">
-                                                        <div class="accordion-item">
-                                                            <h2 class="accordion-header" id="flush-heading{{$week}}">
-                                                                <button class="accordion-button bg-white my-2 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{$week}}" aria-expanded="false" aria-controls="flush-collapse{{$week}}">
-                                                                    <h6>Minggu {{$week+1}}</h6>
-                                                                </button>
-                                                            </h2>
-                                                            <div id="flush-collapse{{$week}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{$week}}" data-bs-parent="#accordionFlushExample">
-                                                                <div class="accordion-body bg-white rounded">
-                                                                    <table class="table table-striped table-bordered">
-                                                                        <thead>
-                                                                            <th>Tanggal</th>
-                                                                            <th>Rencana</th>
-                                                                            <th>Realisasi</th>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                        @if (count($dataDaily) > 0)
-                                                                            @foreach ($dataDaily as $daily)
-                                                                                @if (date('W', strtotime($daily->date)) == @$week->weekNum)
-                                                                                <tr>
-                                                                                    <td class="p-2">{{date('d/m/Y', strtotime($daily->date))}}</td>
-                                                                                    <td class="p-2">{!! (@json_decode(@$daily->progress, true)['rencana']) !!}</td>
-                                                                                    <td class="p-2">{!! (@json_decode(@$daily->progress, true)['realisasi']) !!}</td>
-                                                                                </tr>
-                                                                                @endif
-                                                                            @endforeach
-                                                                        @else
-                                                                        <tr>
-                                                                            <td colspan="4" align="center">Belum ada rencana/ realisasi</td>
-                                                                        </tr>
-                                                                        @endif
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endfor
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                </div>
-                            </div> --}}
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="">Filter Rencana Pegawai</h6>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <select name="minggu_ke" id="minggu_ke" class="form-control select2">
+                                                    @for ($w = 1; $w <= 52; $w++)
+                                                    <option {{$w == date('W') ? 'selected' : ''}} value="{{$w}}">Minggu ke-{{$w}}</option>
+                                                    @endfor
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select name="tahun_ke" id="tahun_ke" class="form-control select2">
+                                                    @for ($y = 2024; $y <= date('Y'); $y++)
+                                                    <option value="{{$y}}">{{$y}}</option>
+                                                    @endfor
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card my-2">
+                    <div class="card-header" style="background-color: #264e70">
+                        <div class="d-flex flex-row justify-content-between">
+                            <h6 class="text-white">Daftar Rencana Pegawai</h6>
+                            <div class="">
+                                <button style="background-color: #679186" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalLong" class="modalTambah btn btn-md text-white"><i class="fas fa-plus"></i>&nbsp; Rencana Mingguan</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive w-100">
+                            <table class="table table-striped table-bordered table-hover" id="rencanaMingguan" style="width: 150%;">
+                                <thead>
+                                    <tr style="background-color: #fff">
+                                        <th class="text-center" rowspan="2">No</th>
+                                        <th class="text-center" rowspan="2">Minggu</th>
+                                        <th class="text-center" rowspan="2">Pegawai</th>
+                                        <th class="text-center" colspan="2">Rencana</th>
+                                        <th class="text-center" rowspan="2">Realisasi <br> Output</th>
+                                        <th class="text-center" colspan="2">Tanggal Buat</th>
+                                        <th class="text-center" colspan="2">Status</th>
+                                        <th class="text-center" rowspan="2">Komentar</th>
+                                        <th class="text-center" rowspan="2">Aksi</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Kegiatan</th>
+                                        <th>Output</th>
+                                        <th>Rencana</th>
+                                        <th>Realisasi</th>
+                                        <th>Rencana</th>
+                                        <th>Realisasi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($dataMingguan as $x => $dm)
+                                    <tr>
+                                        <td>{{$x+1}}</td>
+                                        <td>{{$dm->weekNum}}</td>
+                                        <td>{{Auth::user()->firstname}}</td>
+                                        @if (json_decode($dm->json_data)->input_terdapat_cuti)
+                                        <td><b>Terdapat Rencana Cuti</b></td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        @else
+                                        <td>{!! json_decode($dm->json_data)->input_rencana[0] !!}</td>
+                                        <td>{!! json_decode($dm->json_data)->input_output_rencana[0] !!}</td>
+                                        <td>{!! @json_decode($dm->json_data)->input_realisasi[0] !!}</td>
+                                        <td>{{  date('d/m/Y H:i:s', strtotime($dm->date))}}</td>
+                                        <td>{{  @json_decode($dm->json_data)->input_realisasi_time[0] ? date('d/m/Y H:i:s', strtotime(@json_decode($dm->json_data)->input_realisasi_time[0])) : ""}}</td>
+                                        <td>{{  @json_decode($dm->json_data)->input_rencana_sebagai_draft[0] ? "Draft" : ""}}</td>
+                                        <td>{{  @json_decode($dm->json_data)->input_realisasi_sebagai_draft[0] ? "Draft" : ""}}</td>
+                                        @endif
+                                        {{-- <td>Approved -{{date('d/m/Y H:i:s')}} <br>-<b>Hendro Purwono</b></td> --}}
+                                        <td></td>
+                                        <td class="text-center">
+                                            <a href="{{url('/reporting/output/'.$dm->id)}}" class="btn btn-sm" style="background-color: #ffb4ac"><i class="fas fa-chevron-right text-white"></i></a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -235,75 +222,47 @@
 @endsection
 
 @push('js')
-    <script src="./assets/js/plugins/chartjs.min.js"></script>
-    <script>
-        $(document).delegate('.buat-lap','click',function(){
-            $('.modal-body').find('.page-1').removeClass('d-none').hide().fadeIn(500);
-            $('.modal-body').find('.page-2').addClass('d-none');
-        });
-        $(document).delegate('.buat-lap-2','click',function(){
-            $('.modal-body').find('.page-2').removeClass('d-none').hide().fadeIn(500);
-            $('.modal-body').find('.page-1').addClass('d-none');
-        });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" integrity="sha512-PT0RvABaDhDQugEbpNMwgYBCnGCiTZMh9yOzUsJHDgl/dMhD9yjHAwoumnUk3JydV3QTcIkNDuN40CJxik5+WQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />        
+<script>
+    $('.fade-card').hide().fadeIn(400); 
 
-        $(document).delegate(".bGray", 'click', function(){
-            swal.fire({
-                title: "{{ __('Sabar Mas/ Mba') }}",
-                text: "Realisasi baru dapat diisi setelah pukul 16:00 WIB",
-                type: "failed"
-            });
-        });
+    $(document).ready(function(){
+        $('#rencanaMingguan').DataTable();
+    });
 
-        $(document).delegate(".add", 'click', function(){
-            let html = `
-                <tr>
-                    <td>
-                        <textarea name="rencana[]" placeholder="(Opsional)" class="form-control plan" id="" cols="30" rows="2"></textarea>
-                    </td>
-                </tr>
-            `;
-            $('#tbod').append(html);
-        });
+    // submit
+    $('#formRencanaMingguan').on('submit',function(e){
+        e.preventDefault();
+        var serialized = $(this).serializeArray();
 
-        $(document).delegate('.pg2, .pg3','click',function(){
-            var plan = $('.plan').val();
-            var real = $('.real').val();
-            if (plan || real){
-                // saving
-                $.ajax({
-                    url: "{{url('/reporting/save')}}",
-                    method: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                    data: $('#modalForm').serialize(),
-                    success: function(data){
-                        $('.modal').modal('hide');
-
-                        swal.fire({
-                            title: "{{ __('Success!') }}",
-                            text: "Catatan Tersimpan!",
-                            type: "success"
-                        });
-
-                        window.location.reload();   
-                    }, error: function(data){
-                        swal.fire({
-                            title: "{{ __('Failed') }}",
-                            text: "Catatan Gagal Tersimpan!",
-                            type: "failed"
-                        });
-                    }
-                });
-            } else {
-                $('.notif-danger').text("Isian tidak boleh kosong");
-            }
-        });
-
-        $('.tap-close').click(function(){
-            $(this).hide();
+        $.ajax({
+            url: "{{url('reporting/saveRencanaMingguan/'.Auth::user()->id)}}",
+            method: "POST",
+            data: serialized,
+            success: function(data){
+                swalFire(data.status, data.msg);
+                $('#exampleModalLong').modal('hide');
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+                if (data.status == "success"){
+                    location.reload();
+                }
+            },
         })
-        
-        $('.fade-card').hide().fadeIn(400);        
-    </script>
+    });
+
+    // other
+    $.getScript('https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js', function () {
+            $('.summernote').summernote({
+                theme: 'monokai',
+                // width: 150,
+                height: 200,
+            });
+    });    
+
+    $('.modalTambah').click(function(){
+
+    })
+</script>
 @endpush

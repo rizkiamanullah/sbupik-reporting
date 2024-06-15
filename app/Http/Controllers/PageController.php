@@ -91,25 +91,10 @@ class PageController extends Controller
                 return view("pages.{$page}", compact('wom','data', 'dataRoles'));
             }
             if ($page == "reporting") {
-                $dataToday = DB::table("tb_daily_progress")
-                    ->where('id_user',Auth::user()->id)
-                    ->where('date',date('Y-m-d'))
-                    ->first();
-                $dataDaily = DB::table("tb_daily_progress")
-                    ->where('id_user',Auth::user()->id)
-                    ->get();
-                $dataOther = DB::table("tb_daily_progress")
-                    ->where('id_user', Auth::user()->id)
-                    ->where('date','<',date('Y-m-d'))
-                    ->get();
-                $weekPlan = DB::table('tb_weekly_progress')
-                    ->where('id_user', Auth::user()->id)
-                    ->where('weekNum', date('W'))
-                    ->first();
-                if (!@$weekPlan){
-                    return redirect()->to('dashboard')->with(['msg' => 'Belum membuat rencana minggu ini!']);
-                }
-                return view("pages.{$page}", compact('wom','dataToday', 'dataOther', 'dataDaily', 'weekPlan'));
+                $dataMingguan = DB::table('tb_weekly_progress')
+                ->where('id_user', Auth::user()->id)
+                ->get();
+                return view("pages.{$page}", compact('dataMingguan'));
             }
             if ($page == "monthly") {
                 $dataToday = DB::table("tb_daily_progress")

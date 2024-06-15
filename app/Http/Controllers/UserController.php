@@ -10,274 +10,6 @@ use Hash;
 
 class UserController extends Controller
 {
-    public function show()
-    {
-        $curr_board_db = DB::table("user_kanban")
-        ->get();
-        $curr_task_db = DB::table("user_kanban_tasks")
-        ->where("user_id", Auth::user()->id)
-        ->where("archived", 0)
-        ->get();
-        return view('pages.user.officer.kanban', compact('curr_board_db','curr_task_db'));
-    }
-
-    public function getStickyNotes(){
-        $curr_sticky_notes_db = DB::table('sticky_notes')
-        ->where('user_id', Auth::user()->id)
-        ->get();
-
-        if (@$curr_sticky_notes_db){
-            return json_encode($curr_sticky_notes_db);
-        }
-        return ['status' => 403, 'msg' => 'Error'];
-    }
-
-    public function deleteStickyNotes(){
-        $curr_sticky_notes_db = DB::table('sticky_notes')
-        ->where('user_id', Auth::user()->id)
-        ->where('id', $_POST['id'])
-        ->delete();
-
-        if (@$curr_sticky_notes_db){
-            return ['status' => 200, 'msg' => 'Deleted'];
-        }
-        return ['status' => 403, 'msg' => 'Error'];
-    }
-    public function saveStickyNotes(){
-        $input = $_POST['input'];
-
-        $insert = DB::table('sticky_notes')
-        ->insert([
-            'user_id' => Auth::user()->id,
-            'message' => $input,
-            'created_at' => date('Y-m-d H:i:s'),
-        ]);
-
-        if (@$insert){
-            return ['status' => 200, 'msg' => 'Saved'];
-        }
-        return ['status' => 403, 'msg' => 'Error'];
-    }
-
-    public function fetchMessages(){
-        $curr_message = json_decode(DB::table('direct_messages')
-        ->where('id',$_GET['id'])
-        ->get(), true);
-        if ($curr_message){
-            return json_encode($curr_message);
-        }
-        return ['status' => 403, 'msg' => 'Error'];
-    }
-
-    public function messaging(){
-        $data = $_POST;
-        // dd($data);
-        if ($data['type'] == 'new'){
-            $insert = DB::table('direct_messages')
-            ->insert([
-                'sender_user_id' => Auth::user()->id,
-                'receiver_user_id' => $data['receiver_id'],
-                'created_at' => date('Y-m-d H:i:s'),
-                'created_by' => Auth::user()->email,
-            ]);
-            if ($insert){
-                return ['status' => 200, 'msg' => 'Created'];
-            }
-        }
-
-        if ($data['type'] == 'send'){
-            $message = [
-                'id_gen' => uniqid()."_".date('Ymd_His'),
-                'msg' => @$_POST['message'],
-                'sender_email' => Auth::user()->email,
-                'sender_uname' => Auth::user()->username,
-                'time_sent' => date('Y-m-d H:i:s'),
-            ];
-
-            $curr_message = DB::table('direct_messages')
-            ->where('id',$data['message_id'])
-            ->first()->message;
-
-            if ($curr_message == ""){
-                $new_message = [$message];
-            } else {
-                $new_message = json_decode($curr_message, true);
-                array_push($new_message, $message);
-            }
-
-            $update = DB::table('direct_messages')
-            ->where('id',$data['message_id'])
-            ->update([
-                "message" => json_encode($new_message),
-            ]);
-            
-            if ($update){
-                return ['status' => 200, 'msg' => 'Sent'];
-            }
-        }
-        return ['status' => 403, 'msg' => 'Error'];
-
-    }
-
-    public function fetchUsers(){
-        if (
-            $data = DB::table('users')
-            ->where('id',$_GET["id"])
-            ->first()
-        ){
-            return json_encode($data);
-        }
-        return "Err";
-    }
-    public function getReports($id){
-        $data = DB::table('tb_daily_progress')
-        ->where('id_user',$id)
-        ->orderBy('date','desc')
-        ->get();
-        $userData = DB::table('users')
-        ->where('id',$id)
-        ->first();
-        return view('pages.pm-report-daily', compact('data','userData'));
-    }
-
-    public function saveReporting(){
-        $user_id = $_POST['user_id'];
-        $rencana = $_POST['rencana'];
-        $realisasi = $_POST['realisasi'];
-        $id_task = DB::table('tb_weekly_progress')->orderBy('id','desc')->first()->id;
-        $blank_txt = "<ul>";
-        
-        foreach($rencana as $k => $plan){
-            $blank_txt .= "<li>".$plan."</li>";
-        }
-        $blank_txt .= "</ul>";
-        
-        $today = DB::table('tb_daily_progress')
-        ->where('id_user',$user_id)
-        ->where('date', date('Y-m-d'))
-        ->first();
-
-        if ($today){
-            $blank_txt = "<ul>";
-            foreach ($realisasi as $k => $plan) {
-                $blank_txt .= "<li>" . $plan . "</li>";
-            }
-            $blank_txt .= "</ul>";
-
-            $progress = json_decode($today->progress, true);
-            $progress['realisasi'] = $blank_txt;
-            $progress['datetime2'] = date('Y-m-d H:i:s');
-
-            $update = DB::table('tb_daily_progress')
-            ->where('id_user',$user_id)
-            ->where('date',date('Y-m-d'))
-            ->update([
-                'done_for_today' => 1,
-                'progress' => json_encode($progress),
-            ]);
-
-            if ($update){
-                return ['status' => 200, 'success' => true, 'type' => 'update'];
-            }
-            return ['status' => 203, 'success' => false, 'type' => 'update'];
-        }
-
-        $insert = DB::table('tb_daily_progress')
-        ->insert([
-            'id_user' => $user_id,
-            'id_task' => $id_task,
-            'date' => date('Y-m-d'),
-            'progress' => json_encode([
-                'rencana' => $blank_txt,
-                'datetime' => date('Y-m-d H:i:s'),
-            ])
-        ]);
-
-        if ($insert){
-            return ['status' => 200, 'success' => true, 'type' => 'insert'];
-        }
-        return ['status' => 203, 'success' => false, 'type' => 'insert'];
-
-    }
-
-    public function saveReportingWeekly(){
-        $user_id = $_POST['user_id'];
-        $rencana = $_POST['rencana_input'];
-        $weekNum = $_POST['weekNum'];
-
-        $today = DB::table('tb_weekly_progress')
-        ->where('id_user',$user_id)
-        ->where('year',date('Y'))
-        ->where('weekNum',$weekNum)
-        ->first();
-
-        if ($today){
-            $progress = json_decode($today->progress, true);
-            $progress['datetime2'] = date('Y-m-d H:i:s');
-
-            $update = DB::table('tb_weekly_progress')
-            ->where('id_user',$user_id)
-            ->where('year', date('Y'))
-            ->where('weekNum', $weekNum)
-            ->update([
-                'done_for_today' => 1,
-                'json_data' => json_encode($progress),
-            ]);
-
-            if ($update){
-                return redirect()->to('/monthly')->with(['msg' => 'Pelaporan Mingguan Tersimpan!']);
-            }
-            return ['status' => 203, 'success' => false, 'type' => 'update'];
-        }
-
-        $insert = DB::table('tb_weekly_progress')
-        ->insert([
-            'id_user' => $user_id,
-            'date' => date('Y-m-d'),
-            'year'=> date('Y'),
-            'weekNum'=> $weekNum,
-            'json_data' => json_encode([
-                'rencana' => $rencana,
-                'datetime' => date('Y-m-d H:i:s'),
-            ])
-        ]);
-
-        DB::table('users')
-        ->where('id', $user_id)
-        ->update([
-            'json_details' => 1,
-        ]);
-        
-        if ($insert){
-            return redirect()->to('/monthly')->with(['msg' => 'Pelaporan Mingguan Tersimpan!']);
-        }
-        return ['status' => 203, 'success' => false, 'type' => 'insert'];
-
-    }
-
-    public function reportOk(){
-        $id = $_POST['id'];
-        $this_report = DB::table('tb_daily_progress')
-            ->where('id', $id)
-            ->first();
-            
-        if ($this_report){
-            $progress = json_decode($this_report->progress, true);
-            $progress['ok'] = 1;
-            $progress['datetime_ok'] = date('Y-m-d H:i:s');
-
-            $update = DB::table('tb_daily_progress')
-                ->where('id', $id)
-                ->update([
-                    'progress' => json_encode($progress),
-                ]);
-
-            if ($update) {
-                return ['status' => 200, 'success' => true, 'type' => 'update'];
-            }
-        }
-    }
-
     public function changePassword(){
         $this_user_info = DB::table('users')->find(Auth::user()->id);
         $wom = $this->WoM(date('Ymd'));
@@ -287,10 +19,11 @@ class UserController extends Controller
 
     public function changePassword_post(Request $request){
         $up = DB::table('users')
-        ->where('id', Auth::user()->id)
-        ->update([
-            'password' => Hash::make($_POST['passw']),
-        ]);
+            ->where('id', Auth::user()->id)
+            ->update([
+                'password' => Hash::make($_POST['passw']),
+            ]);
+
         if ($up) {
             Auth::logout();
 
@@ -301,5 +34,90 @@ class UserController extends Controller
         } else {
             return redirect()->back()->with(['msg' => "Ubah Password Gagal"]);
         }
+    }
+
+    public function saveRencanaMingguan($id_user){
+        $exist = DB::table('tb_weekly_progress')
+            ->where('id_user', Auth::user()->id)
+            ->where('weekNum', $_POST['input_minggu_ke'])
+            ->where('year', $_POST['input_tahun_ke'])
+            ->first();
+        if ($exist){
+            return ['status' => 'Success', 'msg' => 'Sudah terdapat rencana minggu ini'];
+        }
+
+        $insert = DB::table('tb_weekly_progress')
+            ->insert([
+                'id_user' => Auth::user()->id,
+                'year' => $_POST['input_tahun_ke'],
+                'weekNum' => $_POST['input_minggu_ke'],
+                'date' => date('Y-m-d H:i:s'),
+                'json_data' => json_encode([
+                    'input_rencana_sebagai_draft' => @$_POST['input_rencana_sebagai_draft'],
+                    'input_terdapat_cuti' => @$_POST['input_terdapat_cuti'],
+                    'input_rencana' => $_POST['input_rencana'],
+                    'input_output_rencana' => $_POST['input_output_rencana'],
+                ])
+        ]);
+
+        if ($insert){
+            if (@$_POST['input_rencana_sebagai_draft']){
+                return ['status' => 'success', 'msg' => 'Draft rencana minggu ' . date('W') . ' tersimpan'];
+            }
+            return ['status' => 'success', 'msg' => 'Rencana minggu ' . date('W') . ' tersimpan'];
+        }
+        return ['status' => 'error', 'msg' => 'Rencana minggu ' . date('W') . ' gagal tersimpan'];
+    }
+
+    public function realisasiMingguan($id_weekly){
+        $exist = DB::table('tb_weekly_progress')
+            ->where('id',$id_weekly)
+            ->where('id_user', Auth::user()->id)
+            ->first();
+
+        return view('pages.output', compact('id_weekly', 'exist'));
+    }
+
+    public function saveRealisasiMingguan($id_weekly){
+        $exist = DB::table('tb_weekly_progress')
+            ->where('id', $id_weekly)
+            ->where('id_user', Auth::user()->id)
+            ->first();
+
+            
+        if (@$exist){
+            $json_data = json_decode($exist->json_data);
+            if ($json_data->input_terdapat_cuti){
+                return redirect()->to('/reporting')->with(
+                    ['status' => 'error', 'msg' => 'Realisasi mingguan gagal tersimpan dikarenakan Cuti']
+                );
+            }
+
+            $json_data->input_rencana = [$_POST['input_rencana']];
+            $json_data->input_output_rencana = [$_POST['input_output_rencana']];
+            $json_data->input_realisasi = [$_POST['input_realisasi']];
+            $json_data->input_realisasi_time = [date('Y-m-d H:i:s')];
+            $json_data->input_realisasi_sebagai_draft = [@$_POST['input_realisasi_sebagai_draft']];
+
+            $update = DB::table('tb_weekly_progress')
+                ->where('id', $id_weekly)
+                ->where('id_user', Auth::user()->id)
+                ->update([
+                    'json_data' => json_encode($json_data),
+                ]);
+
+            if ($update) {
+                if (@$_POST['input_realisasi_sebagai_draft']){
+                    return redirect()->to('/reporting')->with(
+                        ['status' => 'success', 'msg' => 'Draft realisasi minggu ' . $exist->weekNum . ' tersimpan']
+                    );
+                }
+                return redirect()->to('/reporting')->with(
+                    ['status' => 'success', 'msg' => 'Realisasi minggu ' . $exist->weekNum . ' tersimpan']
+                );
+            }
+            return ['status' => 'error', 'msg' => 'Realisasi minggu ' . $exist->weekNum . ' gagal tersimpan'];
+        }
+        return ['status' => 'error', 'msg' => 'Rencana minggu ' . $exist->weekNum . ' tidak tersedia'];
     }
 }

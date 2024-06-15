@@ -13,15 +13,15 @@
                                 <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/reporting')}}">
                                     <div class="d-flex flex-column">
                                         <img class="align-self-center" src="{{url('/img/correct.png')}}" style="width: 80px" alt="">
-                                        <p class="align-self-center">Pelaporan Harian</p>
+                                        <p class="align-self-center">Daftar Rencana Mingguan</p>
                                     </div>
                                 </a>
-                                <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/monthly')}}">
+                                {{-- <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/monthly')}}">
                                     <div class="d-flex flex-column">
                                         <img class="align-self-center" src="{{url('/img/correct.png')}}" style="width: 80px" alt="">
                                         <p class="align-self-center blink">Pelaporan Mingguan</p>
                                     </div>
-                                </a>
+                                </a> --}}
                                 {{-- <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/project-management')}}">
                                     <div class="d-flex flex-column">
                                         <img class="align-self-center" src="{{url('/img/project.png')}}" style="width: 80px" alt="">

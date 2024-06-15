@@ -31,7 +31,7 @@
                 ];
             @endphp
             <nav aria-label="breadcrumb">
-                <h5 class="text-dark mb-0">{{ $hari[date('D')]. ", ".date('d')." ".$bulan[date('m')]." ".date('Y') }} | (Minggu ke-{{@$wom}}) </h5><h1 id="txt"></h1>
+                <h5 class="text-dark mb-0">{{ $hari[date('D')]. ", ".date('d')." ".$bulan[date('m')]." ".date('Y') }} | Minggu ke-{{date('W')}} </h5><h1 id="txt"></h1>
             </nav>
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">

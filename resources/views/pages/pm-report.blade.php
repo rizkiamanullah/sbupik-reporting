@@ -43,7 +43,7 @@
             <div class="col-lg-12 my-3">
                 <div class="card" style="background-color: #fff">
                     <div class="card-body">
-                        <h3>Pelaporan Pegawai</h3>
+                        <h3>Daftar Rencana Pegawai</h3>
                         <div class="mt-3">
                             <label>Manajer Proyek</label>
                             <h6 class="">{{Auth::user()->firstname}}</h6>
