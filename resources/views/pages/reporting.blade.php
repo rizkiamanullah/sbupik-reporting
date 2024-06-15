@@ -186,7 +186,7 @@
                                         <td>{{$x+1}}</td>
                                         <td>{{$dm->weekNum}}</td>
                                         <td>{{Auth::user()->firstname}}</td>
-                                        @if (json_decode($dm->json_data)->input_terdapat_cuti)
+                                        @if (@json_decode($dm->json_data)->input_terdapat_cuti)
                                         <td><b>Terdapat Rencana Cuti</b></td>
                                         <td>-</td>
                                         <td>-</td>
