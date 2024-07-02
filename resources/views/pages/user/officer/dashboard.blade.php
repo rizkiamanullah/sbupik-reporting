@@ -13,7 +13,7 @@
                                 <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/reporting')}}">
                                     <div class="d-flex flex-column">
                                         <img class="align-self-center" src="{{url('/img/correct.png')}}" style="width: 80px" alt="">
-                                        <p class="align-self-center">Daftar Rencana Mingguan</p>
+                                        <p class="align-self-center text-center">Daftar Rencana Mingguan</p>
                                     </div>
                                 </a>
                                 {{-- <a class="px-4 btn-outline-primary" style="border-color:coral;" href="{{url('/monthly')}}">

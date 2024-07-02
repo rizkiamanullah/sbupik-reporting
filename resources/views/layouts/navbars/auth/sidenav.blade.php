@@ -121,7 +121,7 @@
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-button-pause text-secondary text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Daftar Rencana Mingguan</span>
+                    <span class="nav-link-text ms-1 text-center">Daftar Rencana Mingguan</span>
                 </a>
             </li>
             {{-- <li class="nav-item btn-outline-secondary">

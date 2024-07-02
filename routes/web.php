@@ -39,8 +39,12 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/setting/password', [UserController::class, 'changePassword']);
 	Route::post('/setting/password/save', [UserController::class, 'changePassword_post']);
 	Route::post('/reporting/saveRencanaMingguan/{id_user}', [UserController::class, 'saveRencanaMingguan']);
+	Route::post('/reporting/saveRencanaHarian/{id_user}', [UserController::class, 'saveRencanaHarian']);
 	Route::get('/reporting/output/{id_user}', [UserController::class, 'realisasiMingguan']);
+	Route::get('/reporting/logbook/{id_user}', [UserController::class, 'logBookHarian']);
 	Route::post('/reporting/saveRealisasiMingguan/{id_weekly}', [UserController::class, 'saveRealisasiMingguan']);
+	
+	Route::get('/getter/rencanaHarian/{id}', [UserController::class, 'getterRencanaHarian']);
 
 	Route::post('/profile', [UserController::class, 'update'])->name('profile.update');
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');

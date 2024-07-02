@@ -69,21 +69,120 @@ class UserController extends Controller
         return ['status' => 'error', 'msg' => 'Rencana minggu ' . date('W') . ' gagal tersimpan'];
     }
 
+    public function getterRencanaHarian($id){
+        $exist = DB::table('tb_daily_progress')
+            ->find($id);
+        return $exist;
+    }
+
+    public function saveRencanaHarian($id_user){
+        if (
+            !strip_tags($_POST['input_rencana'][0]) || 
+            !strip_tags($_POST['input_output_rencana'][0])
+        ) {
+            return redirect()->back()->with(
+                ['status' => 'error', 'msg' => 'Isian rencana/ realisasi tidak boleh kosong']
+            );
+        }
+        
+        $today = DB::table('tb_daily_progress')
+        ->where('date', date('Y-m-d'))
+        ->first();
+        
+        if ($today){
+            return redirect()->back()->with(
+                ['status' => 'error', 'msg' => 'Sudah terdapat rencana hari ini']
+            );
+        }
+
+        $exist = DB::table('tb_daily_progress')
+        ->find($_POST['ids']);
+        
+        if ($exist){
+            $update = DB::table('tb_daily_progress')
+            ->where('id', $_POST['ids'])
+            ->update([
+                'progress' => json_encode([
+                    'input_rencana' => $_POST['input_rencana'],
+                    'input_realisasi' => $_POST['input_output_rencana'],
+                ])
+            ]);
+    
+            if ($update){
+                if (@$_POST['input_rencana_sebagai_draft']){
+                    return ['status' => 'success', 'msg' => 'Draft rencana/ realisasi hari ' . date('d/m/Y', strtotime($_POST['date'])) . ' tersimpan'];
+                }
+                return redirect()->back()->with(
+                    ['status' => 'success', 'msg' => 'Rencana/ realisasi hari ' . date('d/m/Y', strtotime($_POST['date'])) . ' tersimpan']
+                );
+            }
+        }
+
+        $insert = DB::table('tb_daily_progress')
+            ->insert([
+                'id_user' => Auth::user()->id,
+                'id_task' => $_POST['id_task'],
+                'date' => date('Y-m-d H:i:s'),
+                'progress' => json_encode([
+                    'input_rencana' => $_POST['input_rencana'],
+                    'input_realisasi' => $_POST['input_output_rencana'],
+                ])
+        ]);
+
+        if ($insert){
+            if (@$_POST['input_rencana_sebagai_draft']){
+                return ['status' => 'success', 'msg' => 'Draft rencana hari ' . date('d/m/Y') . ' tersimpan'];
+            }
+            return ['status' => 'success', 'msg' => 'Rencana/ realisasi hari ' . date('d/m/Y') . ' tersimpan'];
+        }
+        return ['status' => 'error', 'msg' => 'Rencana/ realisasi hari ' . date('d/m/Y') . ' gagal tersimpan'];
+    }
+
     public function realisasiMingguan($id_weekly){
         $exist = DB::table('tb_weekly_progress')
             ->where('id',$id_weekly)
             ->where('id_user', Auth::user()->id)
             ->first();
+        
+        $dailys = DB::table('tb_daily_progress')
+            ->where('id_task', $id_weekly)
+            ->where('id_user', Auth::user()->id)
+            ->get();
 
-        return view('pages.output', compact('id_weekly', 'exist'));
+        return view('pages.output', compact('id_weekly', 'exist', 'dailys'));
+    }
+
+    public function logBookHarian($id_weekly){
+        $exist = DB::table('tb_weekly_progress')
+            ->where('id',$id_weekly)
+            ->where('id_user', Auth::user()->id)
+            ->first();
+        
+        $dailys = DB::table('tb_daily_progress')
+            ->where('id_task', $id_weekly)
+            ->where('id_user', Auth::user()->id)
+            ->get();
+
+        return view('pages.logbook', compact('id_weekly', 'exist', 'dailys'));
     }
 
     public function saveRealisasiMingguan($id_weekly){
+
+        // checker
+        if (
+            !$_POST['input_rencana'] || 
+            !$_POST['input_output_rencana'] ||
+            !$_POST['input_realisasi']
+        ) {
+            return redirect()->back()->with(
+                ['status' => 'error', 'msg' => 'Isian realisasi tidak boleh kosong']
+            );
+        }
+
         $exist = DB::table('tb_weekly_progress')
             ->where('id', $id_weekly)
             ->where('id_user', Auth::user()->id)
             ->first();
-
             
         if (@$exist){
             $json_data = json_decode($exist->json_data);
@@ -120,4 +219,5 @@ class UserController extends Controller
         }
         return ['status' => 'error', 'msg' => 'Rencana minggu ' . $exist->weekNum . ' tidak tersedia'];
     }
+
 }

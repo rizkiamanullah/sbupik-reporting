@@ -152,7 +152,7 @@
                         <div class="d-flex flex-row justify-content-between">
                             <h6 class="text-white">Daftar Rencana Pegawai</h6>
                             <div class="">
-                                <button style="background-color: #679186" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalLong" class="modalTambah btn btn-md text-white"><i class="fas fa-plus"></i>&nbsp; Rencana Mingguan</button>
+                                <button style="background-color: #679186" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalLong" class="modalTambah btn btn-md text-white"><i class="fas fa-plus"></i>&nbsp; Tambah</button>
                             </div>
                         </div>
                     </div>
@@ -206,7 +206,9 @@
                                         {{-- <td>Approved -{{date('d/m/Y H:i:s')}} <br>-<b>Hendro Purwono</b></td> --}}
                                         <td></td>
                                         <td class="text-center">
-                                            <a href="{{url('/reporting/output/'.$dm->id)}}" class="btn btn-sm" style="background-color: #ffb4ac"><i class="fas fa-chevron-right text-white"></i></a>
+                                            <a href="{{url('/reporting/output/'.$dm->id)}}" class="btn btn-sm" style="background-color: #ffb4ac"><i class="fas fa-edit text-dark"></i>&nbsp;Detail</a>
+                                            <br>
+                                            <a href="{{url('/reporting/logbook/'.$dm->id)}}" class="btn btn-sm" style="background-color: #daeaf6"><i class="fas fa-book text-dark"></i>&nbsp;Log Book</a>
                                         </td>
                                     </tr>
                                     @endforeach
