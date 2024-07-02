@@ -133,9 +133,13 @@ class UserController extends Controller
             if (@$_POST['input_rencana_sebagai_draft']){
                 return ['status' => 'success', 'msg' => 'Draft rencana hari ' . date('d/m/Y') . ' tersimpan'];
             }
-            return ['status' => 'success', 'msg' => 'Rencana/ realisasi hari ' . date('d/m/Y') . ' tersimpan'];
+            return redirect()->back()->with(
+                ['status' => 'success', 'msg' => 'Rencana/ realisasi hari ' . date('d/m/Y') . ' tersimpan']
+            );
         }
-        return ['status' => 'error', 'msg' => 'Rencana/ realisasi hari ' . date('d/m/Y') . ' gagal tersimpan'];
+        return redirect()->back()->with(
+            ['status' => 'error', 'msg' => 'Rencana/ realisasi hari ' . date('d/m/Y') . ' gagal tersimpan']
+        );
     }
 
     public function realisasiMingguan($id_weekly){
