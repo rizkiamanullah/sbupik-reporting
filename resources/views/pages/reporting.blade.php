@@ -114,7 +114,7 @@
         <div class="row">
             <div class="col-lg-12 my-3">
 
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-body">
                         <h6 class="">Filter Rencana Pegawai</h6>
                         <div class="row">
@@ -145,7 +145,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="card my-2">
                     <div class="card-header" style="background-color: #264e70">
@@ -182,12 +182,18 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($dataMingguan as $x => $dm)
+                                    @php
+                                        $week_start = date('d/m/Y', strtotime($dm->year.'-W'.$dm->weekNum.' last sunday'));
+                                        $week_end = date('d/m/Y', strtotime($dm->year.'-W'.$dm->weekNum.' next saturday'));
+                                    @endphp
                                     <tr>
                                         <td>{{$x+1}}</td>
-                                        <td>{{$dm->weekNum}}</td>
+                                        <td class="text-center"><b>{{$dm->weekNum}}</b> <br> ({{$week_start .' - '. $week_end}}) </td>
                                         <td>{{Auth::user()->firstname}}</td>
                                         @if (@json_decode($dm->json_data)->input_terdapat_cuti)
                                         <td><b>Terdapat Rencana Cuti</b></td>
+                                        <td>-</td>
+                                        <td>-</td>
                                         <td>-</td>
                                         <td>-</td>
                                         <td>-</td>
@@ -202,14 +208,14 @@
                                         <td>{{  @json_decode($dm->json_data)->input_realisasi_time[0] ? date('d/m/Y H:i:s', strtotime(@json_decode($dm->json_data)->input_realisasi_time[0])) : ""}}</td>
                                         <td>{{  @json_decode($dm->json_data)->input_rencana_sebagai_draft[0] ? "Draft" : ""}}</td>
                                         <td>{{  @json_decode($dm->json_data)->input_realisasi_sebagai_draft[0] ? "Draft" : ""}}</td>
-                                        @endif
-                                        {{-- <td>Approved -{{date('d/m/Y H:i:s')}} <br>-<b>Hendro Purwono</b></td> --}}
                                         <td></td>
                                         <td class="text-center">
                                             <a href="{{url('/reporting/output/'.$dm->id)}}" class="btn btn-sm" style="background-color: #ffb4ac"><i class="fas fa-edit text-dark"></i>&nbsp;Detail</a>
                                             <br>
                                             <a href="{{url('/reporting/logbook/'.$dm->id)}}" class="btn btn-sm" style="background-color: #daeaf6"><i class="fas fa-book text-dark"></i>&nbsp;Log Book</a>
                                         </td>
+                                        @endif
+                                        {{-- <td>Approved -{{date('d/m/Y H:i:s')}} <br>-<b>Hendro Purwono</b></td> --}}
                                     </tr>
                                     @endforeach
                                 </tbody>

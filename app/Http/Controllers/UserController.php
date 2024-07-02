@@ -77,11 +77,10 @@ class UserController extends Controller
 
     public function saveRencanaHarian($id_user){
         if (
-            !strip_tags($_POST['input_rencana'][0]) || 
-            !strip_tags($_POST['input_output_rencana'][0])
+            !strip_tags($_POST['input_rencana'][0])
         ) {
             return redirect()->back()->with(
-                ['status' => 'error', 'msg' => 'Isian rencana/ realisasi tidak boleh kosong']
+                ['status' => 'error', 'msg' => 'Isian rencana tidak boleh kosong']
             );
         }
         
@@ -89,7 +88,7 @@ class UserController extends Controller
         ->where('date', date('Y-m-d'))
         ->first();
         
-        if ($today){
+        if ($today && !$_POST['ids']){
             return redirect()->back()->with(
                 ['status' => 'error', 'msg' => 'Sudah terdapat rencana hari ini']
             );
@@ -151,6 +150,7 @@ class UserController extends Controller
         $dailys = DB::table('tb_daily_progress')
             ->where('id_task', $id_weekly)
             ->where('id_user', Auth::user()->id)
+            ->orderBy('date', 'desc')
             ->get();
 
         return view('pages.output', compact('id_weekly', 'exist', 'dailys'));
@@ -165,6 +165,7 @@ class UserController extends Controller
         $dailys = DB::table('tb_daily_progress')
             ->where('id_task', $id_weekly)
             ->where('id_user', Auth::user()->id)
+            ->orderBy('date', 'desc')
             ->get();
 
         return view('pages.logbook', compact('id_weekly', 'exist', 'dailys'));

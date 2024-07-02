@@ -93,6 +93,7 @@ class PageController extends Controller
             if ($page == "reporting") {
                 $dataMingguan = DB::table('tb_weekly_progress')
                 ->where('id_user', Auth::user()->id)
+                ->orderBy('weekNum', 'desc')
                 ->get();
                 return view("pages.{$page}", compact('dataMingguan'));
             }

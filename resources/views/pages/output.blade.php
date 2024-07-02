@@ -33,7 +33,7 @@
                                         <td width="10%">
                                             <h6>Tanggal</h6>
                                         </td>
-                                        <td><input type="text" name="date" readonly class="form-control date_t" value="{{date('Ymd')}}"></td>
+                                        <td><input type="text" name="date" readonly class="form-control date_t" value="{{date('d/m/Y')}}"></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -74,6 +74,17 @@
                                             <td>
                                                 <textarea name="input_output_rencana[]" cols="5" rows="10" class="form-control summernote realisasi_summernote"></textarea>
                                             </td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6>Upload</h6></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input accept=".pdf, .jpg, .png, .xlsx, .xls" type="file" style="height: auto;" class="form-control">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><div class="btn btn-sm bg-primary text-white">Reset Upload</div></td>
                                         </tr>
                                         <tr><td></td></tr>
                                     </tbody>
@@ -243,7 +254,14 @@
     $(document).ready(function(){
         $('#logBookHarian').DataTable();
     });
-    
+
+    $('.modalTambah').click(function(){
+        $('.hid_when_loading').show();
+        $('#ids').val('');
+        $('.date_t').val('');
+        $('.rencana_summernote').summernote('code','');
+        $('.realisasi_summernote').summernote('code','');
+    })
     $(document).delegate('.daily-modal', 'click', function(){
         $('.hid_when_loading').hide();
 
