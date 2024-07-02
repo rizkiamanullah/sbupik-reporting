@@ -158,7 +158,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive w-100">
-                            <table class="table table-striped table-bordered table-hover" id="rencanaMingguan" style="width: 150%;">
+                            <table class="table table-striped table-bordered" id="rencanaMingguan" style="width: 150%;">
                                 <thead>
                                     <tr style="background-color: #fff">
                                         <th class="text-center" rowspan="2">No</th>
