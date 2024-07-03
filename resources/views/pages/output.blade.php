@@ -243,15 +243,17 @@
                                             <td> {!! json_decode($daily->progress)->input_realisasi[0] !!} </td>
                                             <td>
                                                 @php
-                                                    $files = json_decode($daily->progress)->arr_files;
+                                                    $files = @json_decode($daily->progress)->arr_files;
                                                 @endphp
-                                                <table class="table table-striped table-bordered">
-                                                    @foreach ($files as $file)
-                                                    <tr>
-                                                        <td><i class="fas fa-file"></i>&nbsp;<a href="{{url('/'.$file)}}">{{explode('/',$file)[2]}}</a></td>
-                                                    </tr>
-                                                    @endforeach
-                                                </table>
+                                                @if (@$files)
+                                                    <table class="table table-striped table-bordered">
+                                                        @foreach ($files as $file)
+                                                        <tr>
+                                                            <td><i class="fas fa-file"></i>&nbsp;<a href="{{url('/'.$file)}}">{{explode('/',$file)[2]}}</a></td>
+                                                        </tr>
+                                                        @endforeach
+                                                    </table>
+                                                @endif
                                             </td>
                                             <td><div class="btn btn-sm daily-modal" data-ids="{{$daily->id}}" data-bs-toggle="modal" data-bs-target="#exampleModalLong" style="background-color: #ffd6a5;"><i class="fas fa-edit text-black"></i></div></td>
                                         </tr>
