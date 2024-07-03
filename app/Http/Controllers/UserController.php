@@ -96,14 +96,26 @@ class UserController extends Controller
 
         $exist = DB::table('tb_daily_progress')
         ->find($_POST['ids']);
-        
+
+        $arr_files = [];
         if ($exist){
+            if (@$_FILES["upload_file"]["name"][0]) {
+                foreach ($_FILES["upload_file"]["name"] as $key => $name) {
+                    $filename = date('ymdhis') . "_" . $name;
+                    $dir = "docs/users/";
+                    if (move_uploaded_file($_FILES['upload_file']['tmp_name'][$key], $dir . $filename)) {
+                        array_push($arr_files, $dir . $filename);
+                    }
+                }
+            }
+
             $update = DB::table('tb_daily_progress')
             ->where('id', $_POST['ids'])
             ->update([
                 'progress' => json_encode([
                     'input_rencana' => $_POST['input_rencana'],
                     'input_realisasi' => $_POST['input_output_rencana'],
+                    'arr_files' => $arr_files,
                 ])
             ]);
     
@@ -117,6 +129,16 @@ class UserController extends Controller
             }
         }
 
+        if (@$_FILES["upload_file"]["name"][0]) {
+            foreach ($_FILES["upload_file"]["name"] as $key => $name) {
+                $filename = date('ymdhis') . "_" . $name;
+                $dir = "docs/users/";
+                if (move_uploaded_file($_FILES['upload_file']['tmp_name'][$key], $dir . $filename)) {
+                    array_push($arr_files, $dir . $filename);
+                }
+            }
+        }
+
         $insert = DB::table('tb_daily_progress')
             ->insert([
                 'id_user' => Auth::user()->id,
@@ -125,6 +147,7 @@ class UserController extends Controller
                 'progress' => json_encode([
                     'input_rencana' => $_POST['input_rencana'],
                     'input_realisasi' => $_POST['input_output_rencana'],
+                    'arr_files' => $arr_files,
                 ])
         ]);
 
@@ -172,7 +195,6 @@ class UserController extends Controller
     }
 
     public function saveRealisasiMingguan($id_weekly){
-
         // checker
         if (
             !$_POST['input_rencana'] || 
@@ -202,6 +224,18 @@ class UserController extends Controller
             $json_data->input_realisasi = [$_POST['input_realisasi']];
             $json_data->input_realisasi_time = [date('Y-m-d H:i:s')];
             $json_data->input_realisasi_sebagai_draft = [@$_POST['input_realisasi_sebagai_draft']];
+            $arr_files = [];
+
+            if (@$_FILES["upload_file"]["name"][0]){
+                foreach ($_FILES["upload_file"]["name"] as $key => $name){
+                    $filename = date('ymdhis')."_".$name;
+                    $dir = "docs/users/";
+                    if (move_uploaded_file($_FILES['upload_file']['tmp_name'][$key], $dir . $filename)){
+                        array_push($arr_files, $dir.$filename);
+                    }
+                }
+                $json_data->arr_files = $arr_files;
+            }
 
             $update = DB::table('tb_weekly_progress')
                 ->where('id', $id_weekly)

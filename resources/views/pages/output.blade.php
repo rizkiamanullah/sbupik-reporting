@@ -86,6 +86,9 @@
                                         <tr>
                                             <td><div class="btn btn-sm bg-primary text-white">Reset Upload</div></td>
                                         </tr>
+                                        <tr>
+                                            <td id="files_td"></td>
+                                        </tr>
                                         <tr><td></td></tr>
                                     </tbody>
                                 </table>                        
@@ -167,12 +170,22 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input accept=".pdf, .jpg, .png, .xlsx, .xls" type="file" style="height: auto;" class="form-control">
+                                                <input multiple name="upload_file[]" accept=".pdf, .jpg, .png, .xlsx, .xls" type="file" style="height: auto;" class="form-control">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><div class="btn btn-sm bg-primary text-white">Reset Upload</div></td>
                                         </tr>
+                                    </table>
+                                    @php
+                                        $files = json_decode($exist->json_data)->arr_files;
+                                    @endphp
+                                    <table class="table table-striped table-bordered">
+                                        @foreach ($files as $file)
+                                        <tr>
+                                            <td><i class="fas fa-file"></i>&nbsp;<a href="{{url('/'.$file)}}">{{explode('/',$file)[2]}}</a></td>
+                                        </tr>
+                                        @endforeach
                                     </table>
                                 </div>
                                 <div class="my-3 d-flex flex-row justify-content-between">
@@ -228,7 +241,18 @@
                                             <td> {!! json_decode($exist->json_data)->input_rencana[0] !!} </td>
                                             <td> {!! json_decode($daily->progress)->input_rencana[0] !!} </td>
                                             <td> {!! json_decode($daily->progress)->input_realisasi[0] !!} </td>
-                                            <td>-</td>
+                                            <td>
+                                                @php
+                                                    $files = json_decode($daily->progress)->arr_files;
+                                                @endphp
+                                                <table class="table table-striped table-bordered">
+                                                    @foreach ($files as $file)
+                                                    <tr>
+                                                        <td><i class="fas fa-file"></i>&nbsp;<a href="{{url('/'.$file)}}">{{explode('/',$file)[2]}}</a></td>
+                                                    </tr>
+                                                    @endforeach
+                                                </table>
+                                            </td>
                                             <td><div class="btn btn-sm daily-modal" data-ids="{{$daily->id}}" data-bs-toggle="modal" data-bs-target="#exampleModalLong" style="background-color: #ffd6a5;"><i class="fas fa-edit text-black"></i></div></td>
                                         </tr>
                                         @endforeach
@@ -261,6 +285,7 @@
         $('.date_t').val('');
         $('.rencana_summernote').summernote('code','');
         $('.realisasi_summernote').summernote('code','');
+        $('#files_td').html('');
     })
     $(document).delegate('.daily-modal', 'click', function(){
         $('.hid_when_loading').hide();
@@ -277,6 +302,23 @@
                     $('.rencana_summernote').summernote('code',progress.input_rencana[0]);
                     $('.realisasi_summernote').summernote('code',progress.input_realisasi[0]);
                     $('.hid_when_loading').show();
+                    let files = progress.arr_files;
+                    let html = `
+                    <table class="table table-striped table-bordered">
+                    `;
+
+                    files.forEach((val, idx) => {
+                        html += `
+                            <tr>
+                                <td><i class="fas fa-file"></i>&nbsp;<a href="{{url('/${val}')}}">{{explode('/','${val}')[0]}}</a></td>
+                            </tr>
+                        `;
+                    });
+
+                    html += `
+                    </table>
+                    `;
+                    $('#files_td').html(html);
                 }
             },
         })
