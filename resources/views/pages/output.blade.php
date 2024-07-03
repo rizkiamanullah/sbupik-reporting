@@ -178,15 +178,17 @@
                                         </tr>
                                     </table>
                                     @php
-                                        $files = json_decode($exist->json_data)->arr_files;
+                                        $files = @json_decode($exist->json_data)->arr_files;
                                     @endphp
-                                    <table class="table table-striped table-bordered">
-                                        @foreach ($files as $file)
-                                        <tr>
-                                            <td><i class="fas fa-file"></i>&nbsp;<a href="{{url('/'.$file)}}">{{explode('/',$file)[2]}}</a></td>
-                                        </tr>
-                                        @endforeach
-                                    </table>
+                                    @if (@$files)
+                                        <table class="table table-striped table-bordered">
+                                            @foreach ($files as $file)
+                                            <tr>
+                                                <td><i class="fas fa-file"></i>&nbsp;<a href="{{url('/'.$file)}}">{{explode('/',$file)[2]}}</a></td>
+                                            </tr>
+                                            @endforeach
+                                        </table>
+                                    @endif
                                 </div>
                                 <div class="my-3 d-flex flex-row justify-content-between">
                                     <div class="">
