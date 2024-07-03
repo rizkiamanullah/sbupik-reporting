@@ -97,9 +97,10 @@ class UserController extends Controller
         $exist = DB::table('tb_daily_progress')
         ->find($_POST['ids']);
 
-        $arr_files = [];
+        $arr_files = @json_decode($exist->progress)->arr_files;
         if ($exist){
             if (@$_FILES["upload_file"]["name"][0]) {
+                $arr_files = [];
                 foreach ($_FILES["upload_file"]["name"] as $key => $name) {
                     $filename = date('ymdhis') . "_" . $name;
                     $dir = "docs/users/";
@@ -130,6 +131,7 @@ class UserController extends Controller
         }
 
         if (@$_FILES["upload_file"]["name"][0]) {
+            $arr_files = [];
             foreach ($_FILES["upload_file"]["name"] as $key => $name) {
                 $filename = date('ymdhis') . "_" . $name;
                 $dir = "docs/users/";
@@ -211,6 +213,7 @@ class UserController extends Controller
             ->where('id_user', Auth::user()->id)
             ->first();
             
+        $arr_files = @json_decode($exist->json_data)->arr_files;
         if (@$exist){
             $json_data = json_decode($exist->json_data);
             if ($json_data->input_terdapat_cuti){
@@ -224,9 +227,9 @@ class UserController extends Controller
             $json_data->input_realisasi = [$_POST['input_realisasi']];
             $json_data->input_realisasi_time = [date('Y-m-d H:i:s')];
             $json_data->input_realisasi_sebagai_draft = [@$_POST['input_realisasi_sebagai_draft']];
-            $arr_files = [];
-
+            
             if (@$_FILES["upload_file"]["name"][0]){
+                $arr_files = [];
                 foreach ($_FILES["upload_file"]["name"] as $key => $name){
                     $filename = date('ymdhis')."_".$name;
                     $dir = "docs/users/";

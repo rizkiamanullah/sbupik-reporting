@@ -63,7 +63,7 @@
                                             <td width="15%"><h6>Rencana<span style="color: red">*</span></h6></td>
                                         </tr>
                                         <tr>
-                                            <td width="100%">
+                                            <td width="%">
                                                 <textarea name="input_rencana[]" cols="5" rows="10" class="form-control summernote rencana_summernote"></textarea>
                                             </td>
                                         </tr>
@@ -116,10 +116,10 @@
                             <h6 class="text-dark">Realisasi Mingguan</h6>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body pr-1">
                         <form action="{{url('/reporting/saveRealisasiMingguan/'.$id_weekly)}}" method="post" enctype="multipart/form-data" id="saveRealisasi">
                             @csrf
-                            <div class="container">
+                            <div class="">
                                 <div class="table-responsive">
                                     <table class="table">
                                         <tr>
@@ -140,7 +140,7 @@
                                 </div>
                                 <hr>
                                 <div class="table-responsive">
-                                    <table class="table table-striped">
+                                    <table class="table table-striped" style="width: auto;">
                                         <tr>
                                             <td><h6>Rencana Mingguan <span style="color: red">*</span></h6></td>
                                         </tr>
@@ -214,7 +214,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body pr-1">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped" id="logBookHarian" style="width: 100%">
                                 <thead>
@@ -350,11 +350,11 @@
     // });
 
     // other
-    $.getScript('https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js', function () {
+    $.getScript('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js', function () {
             $('.summernote').summernote({
                 theme: 'monokai',
-                // width: 150,
-                height: 200,
+                // width: 30,
+                height: 100,
             });
     });    
 </script>
