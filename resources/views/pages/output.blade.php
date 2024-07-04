@@ -80,7 +80,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input accept=".pdf, .jpg, .png, .xlsx, .xls" type="file" style="height: auto;" class="form-control">
+                                                <input name="upload_file[]" multiple accept=".pdf, .jpg, .png, .xlsx, .xls" type="file" style="height: auto;" class="form-control">
                                             </td>
                                         </tr>
                                         <tr>
