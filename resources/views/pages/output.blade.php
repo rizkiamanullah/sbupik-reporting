@@ -98,7 +98,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit" class="btn btn-primary {{Auth::user()->roles_id == 1 ? "" : "d-none"}}">Simpan</button>
                 </div>
                 </div>
             </form>
@@ -117,7 +117,122 @@
                         </div>
                     </div>
                     <div class="card-body pr-1">
-                        <form action="{{url('/reporting/saveRealisasiMingguan/'.$id_weekly)}}" method="post" enctype="multipart/form-data" id="saveRealisasi">
+
+                        @if (Auth::user()->user_role_id > 1)
+                        
+                        <div class="p-1">
+                            <div class="">
+                                <div class="table-responsive">
+                                    <table class="table" style="width: 100%;">
+
+                                        @if (Auth::user()->user_role_id > 1)
+
+                                            <tr>
+                                                <td width="15%">
+                                                    <h6>Pembuat</h6>
+                                                </td>
+                                                <td>
+                                                    <input type="text" readonly value="{{$officer->firstname}}" class="form-control">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><h6>Proyek</h6></td>
+                                                <td>
+                                                    <input type="text" readonly value="Verifikasi Pencairan Dana" class="form-control">
+                                                </td>
+                                            </tr>
+
+                                        @else
+
+                                        <tr>
+                                            <td width="15%">
+                                                <h6>Approver</h6>
+                                            </td>
+                                            <td>
+                                                <input type="text" readonly value="Hendro Purwono" class="form-control">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6>Organisasi</h6></td>
+                                            <td>
+                                                <input type="text" readonly value="Bagian Fasilitasi Perdagangan" class="form-control">
+                                            </td>
+                                        </tr>
+
+                                        @endif
+
+                                    </table>
+                                </div>
+                                <hr>
+                                <div class="table-responsive">
+                                    <table class="table table-striped" style="width: 100%;">
+                                        <tr>
+                                            <td><h6>Rencana Mingguan <span style="color: red">*</span></h6></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {!! json_decode($exist->json_data)->input_rencana[0] !!}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6>Output <span style="color: red">*</span></h6></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {!! json_decode($exist->json_data)->input_output_rencana[0] !!}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6>Realisasi <span style="color: red">*</span></h6></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {!!@json_decode($exist->json_data)->input_realisasi[0]!!}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    @php
+                                        $files = @json_decode($exist->json_data)->arr_files;
+                                    @endphp
+                                    @if (@$files)
+                                        <table class="table table-striped table-bordered">
+                                            @foreach ($files as $file)
+                                            <tr>
+                                                <td><i class="fas fa-file"></i>&nbsp;<a href="{{url('/'.$file)}}">{{explode('/',$file)[2]}}</a></td>
+                                            </tr>
+                                            @endforeach
+                                        </table>
+                                    @endif
+                                </div>
+                                <div class="my-3 d-flex flex-row justify-content-between">
+                                    <form action="{{url('/reporting/saveRealisasiMingguan/komentar/'.$id_weekly.'/'.$exist->id_user)}}" method="POST">
+                                        <div class="">
+                                            <div>
+                                                @csrf
+                                                <table class="table">
+                                                    <tr>
+                                                        <td><h6>Komentar</h6></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><textarea name="komentar" id="komentar" cols="30" rows="10" class="form-control summernote">{!! @json_decode($exist->json_data)->komentar[0] !!}</textarea></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="form-group form-check">
+                                                <input checked type="checkbox" name="input_realisasi_sebagai_draft" class="form-check-input cuti" id="exampleCheck1">
+                                                <label class="form-check-label" for="exampleCheck1">Sudah sesuai</label>
+                                            </div>
+                                            <button type="submit" class="float-right btn btn-md bg-primary text-white"><i class="fas fa-thumbs-up"></i>&nbsp; Approve</button>
+                                        </div>
+                                        <br>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        @else
+                            
+                        <form action="{{url('/reporting/saveRealisasiMingguan/'.$id_weekly.'/'.$exist->id_user)}}" method="post" enctype="multipart/form-data" id="saveRealisasi">
                             @csrf
                             <div class="">
                                 <div class="table-responsive">
@@ -202,6 +317,9 @@
                                 </div>
                             </div>
                         </form>
+
+                        @endif
+
                     </div>
                 </div>
 
@@ -209,7 +327,7 @@
                     <div class="card-header" style="background-color: #b8e0d2">
                         <div class="d-flex flex-row justify-content-between">
                             <h6 class="text-dark">Log Book Harian</h6>
-                            <div class="">
+                            <div class="{{Auth::user()->roles_id == 1 ? "" : "d-none"}}">
                                 <button style="background-color: #9cadce;" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalLong" class="modalTambah btn btn-md text-white"><i class="fas fa-plus"></i>&nbsp; Tambah</button>
                             </div>
                         </div>
@@ -280,6 +398,7 @@
     $('.fade-card').hide().fadeIn(400); 
     
     $(document).ready(function(){
+        $('.table').DataTable();
         $('#logBookHarian').DataTable();
     });
 

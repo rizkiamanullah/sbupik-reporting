@@ -124,15 +124,6 @@
                     <span class="nav-link-text ms-1 text-center">Daftar Rencana Mingguan</span>
                 </a>
             </li>
-            {{-- <li class="nav-item btn-outline-secondary">
-                <a class="nav-link {{  str_contains(request()->url(), 'monthly') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'monthly']) }}">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-button-pause text-secondary text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Pelaporan Mingguan</span>
-                </a>
-            </li> --}}
         @endif
 
         {{-- manager --}}
@@ -146,15 +137,6 @@
                     <span class="nav-link-text ms-1">Laman Utama</span>
                 </a>
             </li>
-            {{-- <li class="nav-item btn-outline-secondary">
-                <a class="nav-link {{  str_contains(request()->url(), 'reporting') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'reporting']) }}">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-button-pause text-secondary text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Pelaporan</span>
-                </a>
-            </li> --}}
             <li class="nav-item btn-outline-secondary">
                 <a class="nav-link {{ str_contains(request()->url(), 'list-officer') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'list-officer']) }}">
                     <div
@@ -162,6 +144,15 @@
                         <i class="ni ni-folder-17 text-dark text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Daftar Rencana Pegawai</span>
+                </a>
+            </li>
+            <li class="nav-item btn-outline-secondary">
+                <a class="nav-link {{ str_contains(request()->url(), 'projects') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'projects']) }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-briefcase-24 text-dark text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Manajemen Proyek</span>
                 </a>
             </li>
             {{-- <li class="nav-item btn-outline-secondary">

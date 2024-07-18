@@ -164,37 +164,40 @@ class UserController extends Controller
 
     }
 
-    public function realisasiMingguan($id_weekly){
+    public function realisasiMingguan($id_weekly, $oid){
         $exist = DB::table('tb_weekly_progress')
             ->where('id',$id_weekly)
-            ->where('id_user', Auth::user()->id)
+            ->where('id_user', $oid)
             ->first();
         
         $dailys = DB::table('tb_daily_progress')
             ->where('id_task', $id_weekly)
-            ->where('id_user', Auth::user()->id)
+            ->where('id_user', $oid)
             ->orderBy('date', 'desc')
             ->get();
 
-        return view('pages.output', compact('id_weekly', 'exist', 'dailys'));
+        $officer = DB::table('users')
+            ->find($oid);
+
+        return view('pages.output', compact('oid','id_weekly', 'exist', 'dailys', 'officer'));
     }
 
-    public function logBookHarian($id_weekly){
+    public function logBookHarian($id_weekly, $oid){
         $exist = DB::table('tb_weekly_progress')
             ->where('id',$id_weekly)
-            ->where('id_user', Auth::user()->id)
+            ->where('id_user', $oid)
             ->first();
         
         $dailys = DB::table('tb_daily_progress')
             ->where('id_task', $id_weekly)
-            ->where('id_user', Auth::user()->id)
+            ->where('id_user', $oid)
             ->orderBy('date', 'desc')
             ->get();
 
         return view('pages.logbook', compact('id_weekly', 'exist', 'dailys'));
     }
 
-    public function saveRealisasiMingguan($id_weekly){
+    public function saveRealisasiMingguan($id_weekly, $oid){
         // checker
         if (
             !$_POST['input_rencana'] || 
@@ -257,6 +260,73 @@ class UserController extends Controller
                 );
             }
             return ['status' => 'error', 'msg' => 'Realisasi minggu ' . $exist->weekNum . ' gagal tersimpan'];
+        }
+        return ['status' => 'error', 'msg' => 'Rencana minggu ' . $exist->weekNum . ' tidak tersedia'];
+    }
+
+    public function saveRealisasiMingguanKomentar($id_weekly, $oid){
+        // checker
+        if (
+            !$_POST['komentar']
+        ) {
+            return redirect()->back()->with(
+                ['status' => 'error', 'msg' => 'Komentar tidak boleh kosong']
+            );
+        }
+
+        $exist = DB::table('tb_weekly_progress')
+            ->where('id', $id_weekly)
+            ->where('id_user', $oid)
+            ->first();
+        // dd($exist);
+
+        $arr_files = [];
+        if (@$exist){
+            $json_data = json_decode($exist->json_data);
+            if ($json_data->input_terdapat_cuti){
+                return redirect()->to('/reporting')->with(
+                    ['status' => 'error', 'msg' => 'Realisasi mingguan gagal tersimpan dikarenakan Cuti']
+                );
+            }
+
+            $json_data->komentar = [$_POST['komentar']];
+            $json_data->approved = [$_POST['input_output_rencana']];
+            // $json_data->input_realisasi = [$_POST['input_realisasi']];
+            // $json_data->input_realisasi_time = [date('Y-m-d H:i:s')];
+            // $json_data->input_realisasi_sebagai_draft = [@$_POST['input_realisasi_sebagai_draft']];
+
+            // $json_data->arr_files = @json_decode($exist->json_data)->arr_files;
+            // if (@$_FILES["upload_file"]["name"][0]){
+            //     $arr_files = [];
+            //     foreach ($_FILES["upload_file"]["name"] as $key => $name){
+            //         $filename = date('ymdhis')."_".$name;
+            //         $dir = "docs/users/";
+            //         if (move_uploaded_file($_FILES['upload_file']['tmp_name'][$key], $dir . $filename)){
+            //             array_push($arr_files, $dir.$filename);
+            //         }
+            //     }
+            //     $json_data->arr_files = $arr_files;
+            // }
+
+
+            $update = DB::table('tb_weekly_progress')
+                ->where('id', $id_weekly)
+                ->where('id_user', $oid)
+                ->update([
+                    'json_data' => json_encode($json_data),
+                ]);
+
+            if ($update) {
+                if (@$_POST['input_realisasi_sebagai_draft']){
+                    return redirect()->to('/list-officer')->with(
+                        ['status' => 'success', 'msg' => 'Komentar tersimpan']
+                    );
+                }
+                return redirect()->to('/list-officer')->with(
+                    ['status' => 'success', 'msg' => 'Komentar tersimpan']
+                );
+            }
+            return ['status' => 'error', 'msg' => 'Komentar gagal tersimpan'];
         }
         return ['status' => 'error', 'msg' => 'Rencana minggu ' . $exist->weekNum . ' tidak tersedia'];
     }

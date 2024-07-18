@@ -128,7 +128,11 @@ class PageController extends Controller
                 $dataUser = DB::table('users')
                 ->where('user_role_id', 1)
                 ->get();
-                return view("pages.{$page}", compact('wom','dataUser'));
+                $dataMingguan = DB::table('tb_weekly_progress')
+                    // ->where('id_user', Auth::user()->id)
+                    ->orderBy('weekNum', 'desc')
+                    ->get();
+                return view("pages.{$page}", compact('wom','dataUser', 'dataMingguan'));
             }
             if ($page == "uploadajax") {
                 return view("pages.{$page}");

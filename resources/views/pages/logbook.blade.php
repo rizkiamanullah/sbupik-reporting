@@ -15,8 +15,10 @@
     <!-- Modal -->
     <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
+            @if (Auth::user()->role_id == 1)
             <form id="formRencanaHarian" enctype="multipart/form-data" action="{{url('reporting/saveRencanaHarian/'.Auth::user()->id)}}" method="POST">
                 @csrf
+            @endif
                 <div class="modal-content">
                 <div class="modal-header" style="background-color: #679186">
                     <h5 class="modal-title text-white" id="exampleModalLongTitle">Rencana Harian</h5>
@@ -99,7 +101,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit" class="btn btn-primary {{Auth::user()->role_id == 1 ? "" : "d-none"}}">Simpan</button>
                 </div>
                 </div>
             </form>
@@ -115,7 +117,7 @@
                     <div class="card-header" style="background-color: #b8e0d2">
                         <div class="d-flex flex-row justify-content-between">
                             <h6 class="text-dark">Log Book Harian</h6>
-                            <div class="">
+                            <div class="{{Auth::user()->roles_id == 1 ? "" : "d-none"}}">
                                 <button style="background-color: #9cadce;" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalLong" class="modalTambah btn btn-md text-white"><i class="fas fa-plus"></i>&nbsp; Tambah</button>
                             </div>
                         </div>

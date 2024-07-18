@@ -208,11 +208,11 @@
                                         <td>{{  @json_decode($dm->json_data)->input_realisasi_time[0] ? date('d/m/Y H:i:s', strtotime(@json_decode($dm->json_data)->input_realisasi_time[0])) : ""}}</td>
                                         <td>{{  @json_decode($dm->json_data)->input_rencana_sebagai_draft[0] ? "" : ""}}</td>
                                         <td>{{  @json_decode($dm->json_data)->input_realisasi_sebagai_draft[0] ? "" : ""}}</td>
-                                        <td></td>
+                                        <td>{{  @json_decode($dm->json_data)->komentar[0]}}</td>
                                         <td class="text-center">
-                                            <a href="{{url('/reporting/output/'.$dm->id)}}" class="btn btn-sm" style="background-color: #ffb4ac"><i class="fas fa-edit text-dark"></i>&nbsp;Detail</a>
+                                            <a href="{{url('/reporting/output/'.$dm->id.'/'.$dm->id_user)}}" class="btn btn-sm" style="background-color: #ffb4ac"><i class="fas fa-edit text-dark"></i>&nbsp;Detail</a>
                                             <br>
-                                            <a href="{{url('/reporting/logbook/'.$dm->id)}}" class="btn btn-sm" style="background-color: #daeaf6"><i class="fas fa-book text-dark"></i>&nbsp;Log Book</a>
+                                            <a href="{{url('/reporting/logbook/'.$dm->id.'/'.$dm->id_user)}}" class="btn btn-sm" style="background-color: #daeaf6"><i class="fas fa-book text-dark"></i>&nbsp;Log Book</a>
                                         </td>
                                         @endif
                                         {{-- <td>Approved -{{date('d/m/Y H:i:s')}} <br>-<b>Hendro Purwono</b></td> --}}

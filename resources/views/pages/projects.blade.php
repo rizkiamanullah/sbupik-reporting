@@ -2,361 +2,260 @@
 
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Proyek'])
-    <div class="row mt-4 mx-4">
-        <div class="col-12">
-            <div class="card mb-4 fade-card">
-                <div class="card-header pb-0 bg-warning">
-                    <h6 class="text-white">SMART PSR</h6>
-                </div>
-                <div class="card-body px-0 pt-0 pb-2">
-                    <div class="row p-3">
-                        <div class="col-sm-12">
-                            <div class="btn btn-c btn-md">Informasi</div>
-                            <div class="btn btn-a btn-md">Status Terkini</div>
-                            <div class="btn btn-b btn-md bg-primary text-white">Infografis</div>
-                        </div>
-                        <div class="col-sm-12">
-                            <table class="table table-page-general table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div id="donutchart1" style="width: 40vw; height: 400px;"></div>
-                                        </td>
-                                        <td>
-                                            <div id="curve_chart1" style="width: 40vw; height: 400px"></div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table class="table table-page-status table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <td width="30%">
-                                            <img src="https://www.bpdp.or.id/uploads/images/image_750x_6470ca19ae16c.jpg" alt="">
-                                        </td>
-                                        <td align="left">
-                                            <table class="table table-bordered">
-                                                <tr>
-                                                    <td>Nama Proyek</td>
-                                                    <td>SMART PSR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Tanggal Mulai</td>
-                                                    <td>01/01/1970</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Klien</td>
-                                                    <td>BPDPKS</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Nilai Proyek</td>
-                                                    <td>Rp. xxxx</td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td align="left">
-                                            <table class="table table-bordered">
-                                                <tr>
-                                                    <td>Nama Proyek</td>
-                                                    <td>SMART PSR</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Tanggal Mulai</td>
-                                                    <td>01/01/1970</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pekerjaan Pending</td>
-                                                    <td>3 / 20</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pekerjaan Selesai</td>
-                                                    <td>25 / 30</td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table class="table table-page-infograph table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <td>
 
-                                        </td>
-                                        <td>
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <form id="formTambahProyek" enctype="multipart/form-data" action="{{url('projects/saveProject')}}" method="POST">
+                @csrf
+                <div class="modal-content">
+                <div class="modal-header" style="background-color: #679186">
+                    <h5 class="modal-title text-white" id="exampleModalLongTitle">Tambah Proyek Baru</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h6>Nama Proyek</h6>
+                            <input type="text" name="nama_proyek" class="form-control" placeholder="Nama Proyek">
+                        </div>
+                        <div class="col-sm-6">
+                            <h6>Status</h6>
+                            <select name="status_proyek" id="" class="form-control select2" style="width: 100%">
+                                <option value="Belum Dimulai">Belum Dimulai</option>
+                                <option value="Sedang Berjalan">Sedang Berjalan</option>
+                                <option value="Tertahan">Tertahan</option>
+                                <option value="Dibatalkan">Dibatalkan</option>
+                                <option value="Selesai">Selesai</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <h6>Klien</h6>
+                            <input type="text" name="klien_proyek" placeholder="Nama Klien" class="form-control">
+                        </div>
+                        <div class="col-sm-12">
+                            <h6>Nilai Total</h6>
+                            <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Rp.</span>
+                            </div>
+                            <input type="text" name="total_biaya_proyek" placeholder="0" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                            </div>                        
+                        </div>
+                        <div class="col-sm-6">
+                            <h6>Tanggal Mulai</h6>
+                            <input type="date" name="tanggal_mulai_proyek" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <h6>Tenggal Waktu</h6>
+                            <input type="date" name="tenggat_waktu_proyek" class="form-control">
+                        </div>
+                        <div class="col-sm-12">
+                            <h6>Anggota Proyek</h6>
+                            <select name="anggota_proyek[]" readonly id="" multiple class="form-control select2">
+                                @foreach ($users as $user)
+                                    <option value="{{$user->firstname}}">{{$user->firstname}}</option>
+                                @endforeach
+                            </select>
+                            <hr>
+                            <h6>Deskripsi Proyek</h6>
+                            <textarea name="deskripsi_proyek" id="summernote" cols="30" rows="5" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+    {{-- readonly --}}
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <form id="" enctype="multipart/form-data" action="#" method="POST">
+                @csrf
+                <div class="modal-content">
+                <div class="modal-header" style="background-color: #679186">
+                    <h5 class="modal-title text-white" id="exampleModalTitle">Detail Proyek</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="btn btn-md data-add"></i>&nbsp; Buka Project</div>
-            </div>
-        </div>
-        <div class="col-12">
-            <div class="card mb-4 fade-card">
-                <div class="card-header pb-0 bg-success">
-                    <h6 class="text-white">SARPRAS</h6>
-                </div>
-                <div class="card-body px-0 pt-0 pb-2">
-                    <div class="row p-3">
+                <div class="modal-body">
+                    <div class="row hid">
                         <div class="col-sm-12">
-                            <div class="btn btn-md">Informasi</div>
-                            <div class="btn btn-md">Status Terkini</div>
-                            <div class="btn btn-md bg-primary text-white">Infografis</div>
+                            <h6>Nama Proyek</h6>
+                            <input type="text" readonly id="nama" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <h6>Status</h6>
+                            <input type="text" readonly id="stat" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <h6>Klien</h6>
+                            <input type="text" readonly id="klien" class="form-control">
                         </div>
                         <div class="col-sm-12">
-                            <table class="table table-bordered">
-                                <tbody>
+                            <h6>Nilai Total</h6>
+                            <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Rp.</span>
+                            </div>
+                            <input type="text" readonly id="nilai" class="form-control">
+                            </div>                        
+                        </div>
+                        <div class="col-sm-6">
+                            <h6>Tanggal Mulai</h6>
+                            <input type="text" readonly id="mulai" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <h6>Tenggal Waktu</h6>
+                            <input type="text" readonly id="tenggat" class="form-control">
+                        </div>
+                        <div class="col-sm-12">
+                            <h6>Anggota Proyek</h6>
+                            <input type="text" readonly id="anggota" class="form-control">
+                            <hr>
+                            <h6>Deskripsi Proyek</h6>
+                            <div class="table-responsive">
+                                <table class="table">
                                     <tr>
-                                        <td>
-                                            <div id="donutchart0" style="width: 40vw; height: 400px;"></div>
-                                        </td>
-                                        <td>
-                                            <div id="curve_chart0" style="width: 40vw; height: 400px"></div>
-                                        </td>
+                                        <td><textarea id="desc" readonly cols="30" rows="10" class="form-control"></textarea></td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="btn btn-md data-add"></i>&nbsp; Buka Project</div>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger hid" data-bs-dismiss="modal"><i class="fas fa-trash"></i>&nbsp; Hapus</button>
+                    <a href="" class="btn btn-success href text-white hid"><i class="fas fa-edit"></i>&nbsp;Ubah</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+                </div>
+            </form>
         </div>
-        <div class="col-12">
-            <div class="card mb-4 fade-card">
-                <div class="card-header pb-0 bg-primary">
-                    <h6 class="text-white">SCI Kemitraan</h6>
+    </div>
+
+    <div class="container-fluid my-3 fade-card">
+        <div class="card">
+            <div class="card-header bg-secondary">
+                <div class="d-flex flex-row justify-content-between">
+                    <h6 class="text-white">Manajemen Proyek</h6>
+                    <div class="btn btn-sm bg-success text-white" data-bs-toggle="modal" data-bs-target="#exampleModalLong">Tambah</div>
                 </div>
-                <div class="card-body px-0 pt-0 pb-2">
-                    <div class="row p-3">
-                        <div class="col-sm-12">
-                            <div class="btn btn-md">Informasi</div>
-                            <div class="btn btn-md">Status Terkini</div>
-                            <div class="btn btn-md bg-primary text-white">Infografis</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h6>Ringkasan Proyek</h6>
+                        @php
+                            
+                        @endphp
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <td><h2>0</h2></td>
+                                    <td><h2>0</h2></td>
+                                    <td><h2>0</h2></td>
+                                    <td><h2>0</h2></td>
+                                    <td><h2>0</h2></td>
+                                </tr>
+                                <tr>
+                                    <td>Belum Dimulai</td>
+                                    <td>Sedang Berjalan</td>
+                                    <td>Tertahan</td>
+                                    <td>Dibatalkan</td>
+                                    <td>Selesai</td>
+                                </tr>
+                            </table>
                         </div>
-                        <div class="col-sm-12">
-                            <table class="table table-bordered">
+                        <hr>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover" id="maintable">
+                                <thead>
+                                    <th>No</th>
+                                    <th>Nama Proyek</th>
+                                    <th>Status</th>
+                                    <th>Klien</th>
+                                    <th>Tanggal</th>
+                                    <th>Tenggat</th>
+                                    <th>Anggota Proyek</th>
+                                    <th>Aksi</th>
+                                </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <div id="donutchart2" style="width: 40vw; height: 400px;"></div>
-                                        </td>
-                                        <td>
-                                            <div id="curve_chart2" style="width: 40vw; height: 400px"></div>
-                                        </td>
-                                    </tr>
+                                    @foreach ($projects as $key => $project)
+                                        <tr>
+                                            <td>{{$loop->iteration}}</td>
+                                            <td>{{$project->nama}}</td>
+                                            <td>{{json_decode($project->json_details, true)['status_proyek']}}</td>
+                                            <td>{{json_decode($project->json_details, true)['klien_proyek']}}</td>
+                                            <td>{{json_decode($project->json_details, true)['tanggal_mulai_proyek']}}</td>
+                                            <td>{{json_decode($project->json_details, true)['tenggat_waktu_proyek']}}</td>
+                                            <td>{{json_decode($project->json_details,true)['anggota_proyek'][0].", ..."}}</td>
+                                            <td>
+                                                <a href="{{url('/projects/monitoring/'.$project->id)}}" class="btn btn-warning"><i class="fa fa-pie-chart"></i>&nbsp;Progress</a>
+                                                <br>
+                                                <div class="btn btn-primary text-white modalDetail" data-id="{{$project->id}}" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-list"></i>&nbsp;Detail</div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-                <div class="btn btn-md data-add"></i>&nbsp; Buka Project</div>
             </div>
         </div>
     </div>
-    <script 
-    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    </script>
-    {{-- donut --}}
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-    google.charts.load("current", {packages:["corechart"]});
-    google.charts.setOnLoadCallback(drawChart1);
-    function drawChart1() {
-        var data = google.visualization.arrayToDataTable([
-        ['Milestone', 'Progress per Hari'],
-        ['Inisiasi',11],
-        ['Perencanaan',2],
-        ['Eksekusi',  2],
-        ['Monitoring & Kontrol', 7],
-        ['Selesai', 2],
-        ]);
+    
+<script>
+    $('.fade-card').hide().fadeIn(400); 
+    
+    $(document).ready(function(){
+        $('#maintable').DataTable();
+        $('.select2').select2({width:'100%', multiple: true});
+    });
 
-        var options = {
-        title: 'Progress Project',
-        pieHole: 0.4,
-        };
-
-        var chart0 = new google.visualization.PieChart(document.getElementById('donutchart0'));
-        var chart1 = new google.visualization.PieChart(document.getElementById('donutchart1'));
-        var chart2 = new google.visualization.PieChart(document.getElementById('donutchart2'));
-        chart0.draw(data, options);
-        chart1.draw(data, options);
-        chart2.draw(data, options);
-    }
-    </script>   
-    <script type="text/javascript">
-    // google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart2);
-
-    function drawChart2() {
-        var data = google.visualization.arrayToDataTable([
-        ['Year', 'Kurva S'],
-        ['0', 5],
-        ['1', 5],
-        ['2', 15],
-        ['3', 50],
-        ['4', 55],
-        ]);
-
-        var options = {
-        title: 'Kurva S',
-        curveType: 'function',
-        legend: { position: 'bottom' }
-        };
-
-        var chart0 = new google.visualization.LineChart(document.getElementById('curve_chart0'));
-        var chart1 = new google.visualization.LineChart(document.getElementById('curve_chart1'));
-        var chart2 = new google.visualization.LineChart(document.getElementById('curve_chart2'));
-
-        chart0.draw(data, options);
-        chart1.draw(data, options);
-        chart2.draw(data, options);
-    }
-    </script>
-    <script>
-        // anim
-        $('.fade-card').hide().fadeIn(400);
-        $(document).delegate('.batal','click',function(){
-            window.location.href = "{{url('/customer-management')}}";
-        });
-
-        $(document).delegate('.data-add','click',function(){
-            $(this).hide();
-            $('.edit').hide();
-            $('.del').hide();
-            let tbody = $('.data-body');
-            tbody.append(`
-                <tr>
-                    <td width="25%">
-                        <div class="d-flex px-3 py-1">
-                            <div>
-                                <img src="./img/tim.png" class="avatar me-3" alt="image">
-                            </div>
-                            <div class="d-flex flex-column justify-content-center col-a">
-                                <input type="text" placeholder="Nama Customer" name="name_add" class="form-control input-a">
-                            </div>
-                        </div>
-                    </td>
-                    <td class="col-b" width="25%">
-                    </td>
-                    <td class="align-middle text-end">
-                        <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                            <p data-id="" role="button" class="text-sm mx-2 batal btn text-danger font-weight-bold mb-0">Batal</p>
-                            <p data-id="" class="text-sm btn mx-2 add bg-primary text-white font-weight-bold mb-0">Simpan</p>
-                        </div>
-                    </td>
-                </tr>
-            `).hide()
-        .fadeIn(200);
-        })
-
-        $(document).delegate('.del','click',function(){
-            if (confirm('Yakin ingin menghapus?')){
-                $.ajax({
-                    type: "POST",
-                    url: "{{url('/deleteRowData')}}",
-                    data: {
-                        "id": $(this).data('id'),
-                        "type": 'customer',
-                        "_token": "{{ csrf_token() }}",
-                    },
-                    success: function(data){
-                        console.log(data);
-                        window.location.href = "{{url('/customer-management')}}";
-                    },
-                }).done(function(){});
+    $(document).delegate('.modalDetail','click', function(){
+        let id = $(this).data('id');
+        $('.hid').hide();
+        $.ajax({
+            url: '{{url("/getter/project")}}'+'/'+id,
+            method: "GET",
+            success: function(data){
+                let ul = "";
+                let json = JSON.parse(data.json_details);
+                let ang = json.anggota_proyek;
+                ang.forEach((val,idx) => {
+                    ul+= val+", ";
+                })
+                $('#nama').val(data.nama);
+                $('#stat').val(json.status_proyek);
+                $('#klien').val(json.klien_proyek);
+                $('#nilai').val(data.nilai_real);
+                $('#mulai').val(json.tanggal_mulai_proyek);
+                $('#tenggat').val(json.tenggat_waktu_proyek);
+                $('#anggota').val(ul);
+                $('#desc').summernote('code',json.deskripsi_proyek);
+                $('#desc').summernote('disable');
+                $('.href').attr('href',"{{url('/projects/edit').'/'}}"+data.id);
+                $('.hid').show();
             }
         })
+    })
 
-        $(document).delegate('.add','click',function(){
-            let tr = $(this).parent().parent().parent();
-            let input_a = tr.find('.input-a').val();
-            let input_b = tr.find('.input-b').val();
-            let input_c = tr.find('.input-c').val();
-            let input_d = tr.find('.input-d').val();
-            let id = $(this).data('id');
-            console.log(input_a, input_b, id);
-            $.ajax({
-                type: "POST",
-                url: "{{url('/saveRowData')}}",
-                data: {
-                    "id": $(this).data('id'),
-                    "nama": input_a,
-                    // "role": input_b,
-                    // "email": input_c,
-                    // "password": input_d,
-                    "type": 'customer',
-                    "_token": "{{ csrf_token() }}",
-                },
-                success: function(data){
-                    console.log(data);
-                    window.location.href = "{{url('/customer-management')}}";
-                },
-            }).done(function(){});
-        });
-
-        $(document).delegate('.save','click',function(){
-            let tr = $(this).parent().parent().parent();
-            let input_a = tr.find('.input-a').val();
-            let input_b = tr.find('.input-b').val();
-            let input_c = tr.find('.input-c').val();
-            let id = $(this).data('id');
-            console.log(input_a, input_b, id);
-            $.ajax({
-                type: "POST",
-                url: "{{url('/updateRowData')}}",
-                data: {
-                    "id": $(this).data('id'),
-                    "nama": input_a,
-                    // "role": input_b,
-                    // "email": input/_c,
-                    "type": 'customer',
-                    "_token": "{{ csrf_token() }}",
-                },
-                success: function(data){
-                    console.log(data);
-                    window.location.href = "{{url('/customer-management')}}";
-                },
-            }).done(function(){});
-        });
-
-        $(document).delegate('.edit','click',function(){
-            let tr = $(this).parent().parent().parent();
-            let id = $(this).data('id');
-            let a = tr.find('.col-a');
-            let b = tr.find('.col-b');
-            let c = tr.find('.col-c');
-            let a_val = a.find('.text-sm').text();
-            let b_val = b.find('.text-sm').text();
-            let c_val = c.find('.text-sm').text();
-            console.log(a_val,b_val,c_val);
-            $('.fade-card').hide().fadeIn(200);
-            a.html(`
-            <input type="text" placeholder="Masukan nama" name="input-a" class="form-control input-a" value="${a_val}">
-            `);
-            // c.html(`
-            // <input type="text" placeholder="Masukan email" name="input-c" class="form-control input-c" value="${c_val}">
-            // `);
-            // b.html(`
-            // <select required name="input-b" id="" class="form-control input-b">
-            //     <option value="99">Admin - 99</option>
-            //         @foreach (@$dataRoles as $role)
-            //             <option value="{{$role->id}}" ${b_val == '{{$role->id}}' ? 'selected': ''} >{{$role->id}} - {{$role->nama}}</option>
-            //         @endforeach
-            //     </select>
-            //     `);
-            $(this).text('Batal').removeClass('edit').addClass('batal');
-            $(this).parent().append(`
-                <p data-id="${id}" class="text-sm btn mx-2 save btn-primary font-weight-bold mb-0">Simpan</p>
-            `);
-            $('.edit').hide();
-            $('.data-add').hide();
-            tr.parent().find('.del').hide();
-        })
-    </script>
+    // other
+    $.getScript('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js', function () {
+            $('#summernote').summernote({
+                theme: 'monokai',
+                // width: 30,
+                height: 100,
+            });
+    });    
+</script>
 @endsection
