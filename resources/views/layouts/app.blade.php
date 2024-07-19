@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+    {{-- 2024 made by rizkiamanullah for sucofindo 👍 --}}
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,6 +20,7 @@
     <link href="{{url('assets/css/nucleo-svg.css')}}" rel="stylesheet" />
     <!-- CSS Files -->
     <link id="pagestyle" href="{{url('assets/css/argon-dashboard.css')}}" rel="stylesheet" />
+    {{-- 2024 made by rizkiamanullah for sucofindo 👍 --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
     <!-- datatables -->
@@ -33,6 +34,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js" defer></script>    
 
     {{-- pace js --}}
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha512-2cbsQGdowNDPcKuoBd2bCcsJky87Mv0LEtD/nunJUgk6MOYTgVMGihS/xCEghNf04DPhNiJ4DZw5BxDd1uyOdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-flash.min.css" integrity="sha512-hPHdudSZUyxoMNAYUu8c/2BDg1ah3tCtdhFwWTUN4qI8Y5emCPVKwyR1tJXhL/uBx7x7MYKGvc1TbdH6mwGS8Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     {{-- fullCalendar --}}
@@ -77,6 +79,7 @@
             @include('layouts.navbars.auth.sidenav')
                 <main class="main-content border-radius-lg">
                     @yield('content')
+                    {{-- 2024 made by rizkiamanullah for sucofindo 👍 --}}
                 </main>
             @include('components.fixed-plugin')
         @endif
@@ -127,6 +130,7 @@
         </script>
     @endif
     @stack('js');
+    {{-- 2024 made by rizkiamanullah for sucofindo 👍 --}}
 </body>
 
 </html>
